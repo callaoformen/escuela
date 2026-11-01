@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conectar el sistema con Google · Callao For Men</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0b0a08">
+<link rel="icon" href="../img/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#100e0a;--panel:#18150f;--panel-2:#211c13;--line:#3a3020;--gold:#e3a72f;--gold-soft:#f3cf7a;--text:#f6f1e8;--muted:#b9ae9a;--ok:#5cc98a;--bad:#ef5b5b;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Barlow",Arial,sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 60px}
+h1,h2{font-family:"Oswald","Arial Narrow",sans-serif;text-transform:uppercase;margin:0;line-height:1.1}
+h1{font-size:30px}h1 span{color:var(--gold)}
+.lead{color:var(--muted);margin:10px 0 0}
+.top{display:flex;gap:12px;align-items:center;margin-bottom:18px}.top img{width:52px}
+.time{display:inline-block;margin-top:12px;background:rgba(227,167,47,.14);color:var(--gold-soft);border-radius:999px;padding:4px 12px;font-weight:600;font-size:14px}
+.tip{background:rgba(122,167,255,.1);border:1px solid rgba(122,167,255,.3);color:#c9dafd;border-radius:14px;padding:12px 14px;margin-top:16px;font-size:15px}
+ol.steps{list-style:none;counter-reset:s;padding:0;margin:22px 0 0;display:grid;gap:14px}
+ol.steps>li{counter-increment:s;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px 16px 16px 66px;position:relative}
+ol.steps>li::before{content:counter(s);position:absolute;left:16px;top:16px;width:36px;height:36px;border-radius:11px;background:var(--gold);color:#1a1205;font-family:"Oswald";font-size:20px;display:grid;place-items:center;font-weight:600}
+ol.steps h2{font-size:18px;margin-bottom:6px}
+ol.steps p,ol.steps ul{margin:6px 0 0;color:var(--muted)}
+ol.steps ul{padding-left:18px}
+b.k{color:var(--text);background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:0 6px;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border-radius:999px;border:0;font-family:"Oswald";text-transform:uppercase;letter-spacing:.04em;font-size:15px;font-weight:600;text-decoration:none;cursor:pointer;margin-top:10px}
+.btn-gold{background:var(--gold);color:#1a1205}.btn-line{border:2px solid var(--gold);color:var(--gold-soft);background:none}
+textarea{width:100%;height:120px;margin-top:10px;border-radius:12px;border:1px solid var(--line);background:#0c0b08;color:#cfc6b5;font:12px/1.4 ui-monospace,Menlo,monospace;padding:10px}
+input{width:100%;min-height:50px;border-radius:12px;border:1px solid var(--line);background:var(--panel-2);color:var(--text);padding:0 12px;font:inherit;margin-top:10px}
+#res{margin-top:12px;font-weight:600}
+.ok{color:var(--ok)}.bad{color:#ff8f8f}
+.pin{font-family:"Oswald";font-size:26px;letter-spacing:.25em;color:var(--gold-soft)}
+</style>
+</head>
+<body><div class="wrap">
+<div class="top"><img src="../img/logo.png" alt=""><div><h1>Conectar con <span>Google</span></h1></div></div>
+<p class="lead">Se hace <b>una sola vez</b>. Así tus alumnos, asistencias y pagos se guardan en una hoja privada de tu Google Drive y tus educadores pueden entrar desde su celular.</p>
+<span class="time">⏱ Unos 5 minutos</span>
+<div class="tip">💻 Hazlo mejor desde una <b>computadora</b>. Si solo tienes celular, abre los enlaces en <b>Chrome</b> y activa <b>⋮ → Sitio para computadoras</b>.</div>
+
+<ol class="steps">
+  <li><h2>Abre la hoja de la escuela</h2>
+    <p>Entra con tu cuenta <b>callaoformenbarberia@gmail.com</b>.</p>
+    <a class="btn btn-line" href="https://docs.google.com/spreadsheets/d/1WfRjx0BnOLy3h47_s4-Ts3uAEC9N2rtrrDBo9PJyNE4/edit" target="_blank" rel="noopener">Abrir hoja BD Sistema</a>
+    <p>Arriba, en el menú, toca <b class="k">Extensiones</b> → <b class="k">Apps Script</b>.</p></li>
+
+  <li><h2>Pega el código del sistema</h2>
+    <p>Toca el botón para copiarlo. En Apps Script borra todo lo que aparece y pega el código. Luego toca el ícono 💾 <b>Guardar</b>.</p>
+    <button class="btn btn-gold" id="copiar" type="button">Copiar código</button>
+    <textarea id="codigo" readonly aria-label="Código del servidor">/* ===== LÓGICA CENTRAL: la usan el modo demo y el servidor de Google ===== */
+var CORE = (function () {
+  var TURNO_IDS = ['LM-M', 'LM-T', 'MJ-M', 'MJ-T', 'SD-M', 'DFD'];
+  var ESTADOS = ['A', 'T', 'F', 'J'];
+  var CONCEPTOS = ['Mensualidad', 'Matrícula', 'Especialización', 'Otro'];
+  var MEDIOS = ['Efectivo', 'Yape', 'Plin', 'Transferencia'];
+
+  function pad(n) { return (n &lt; 10 ? '0' : '') + n; }
+  var hoyFn = null;
+  function hoy() { if (hoyFn) return hoyFn(); var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function txt(v, max) { return String(v == null ? '' : v).trim().slice(0, max || 120); }
+  function esFecha(s) { return /^\d{4}-\d{2}-\d{2}$/.test(String(s)); }
+  function err(m) { throw new Error(m); }
+  function soloDueno(ses) { if (ses.role !== 'dueno') err('Solo el dueño puede hacer esto'); }
+  function puede(ses, turno) { return ses.role === 'dueno' || ses.turnos.indexOf(turno) &gt;= 0; }
+  function buscar(lista, id) { for (var i = 0; i &lt; lista.length; i++) if (String(lista[i].id) === String(id)) return lista[i]; return null; }
+  function activo(v) { return !(v === false || v === 'false' || v === 'FALSE'); }
+
+  function auth(db, pin) {
+    pin = txt(pin, 12);
+    if (!pin) return null;
+    if (pin === String(db.config.pinDueno)) return { role: 'dueno', nombre: 'Dirección', turnos: TURNO_IDS.slice() };
+    for (var i = 0; i &lt; db.educadores.length; i++) {
+      var e = db.educadores[i];
+      if (String(e.pin) === pin &amp;&amp; activo(e.activo)) {
+        return { role: 'educador', id: e.id, nombre: e.nombre, turnos: String(e.turnos || '').split(',').filter(function (t) { return TURNO_IDS.indexOf(t) &gt;= 0; }) };
+      }
+    }
+    return null;
+  }
+
+  function vista(db, ses) {
+    if (ses.role === 'dueno') {
+      return { sesion: ses, config: db.config, alumnos: db.alumnos, asistencia: db.asistencia, pagos: db.pagos, educadores: db.educadores, notas: db.notas };
+    }
+    var ids = {};
+    var alumnos = db.alumnos.filter(function (a) { if (puede(ses, a.turno)) { ids[a.id] = 1; return true; } return false; });
+    var cfg = { mensualidad: db.config.mensualidad, cuotas: db.config.cuotas, dias: db.config.dias };
+    var equipo = db.educadores.filter(function (e) { return activo(e.activo); }).map(function (e) { return { id: e.id, nombre: e.nombre, turnos: e.turnos }; })
+      .filter(function (e) { return String(e.turnos).split(',').some(function (t) { return ses.turnos.indexOf(t) &gt;= 0; }); });
+    return {
+      sesion: ses, config: cfg, alumnos: alumnos,
+      asistencia: db.asistencia.filter(function (r) { return ids[r.alumnoId] &amp;&amp; puede(ses, r.turno); }),
+      pagos: [], educadores: equipo,
+      notas: db.notas.filter(function (n) { return ids[n.alumnoId]; })
+    };
+  }
+
+  var acciones = {
+    datos: function (db, ses) { return vista(db, ses); },
+
+    guardarAlumno: function (db, ses, d) {
+      soloDueno(ses);
+      var nombre = txt(d.nombre, 60);
+      if (!nombre) err('Escribe el nombre del alumno');
+      if (TURNO_IDS.indexOf(d.turno) &lt; 0) err('Elige un turno');
+      var modulo = Math.min(6, Math.max(1, parseInt(d.modulo, 10) || 1));
+      var fecha = esFecha(d.fechaInicio) ? d.fechaInicio : hoy();
+      var a = d.id ? buscar(db.alumnos, d.id) : null;
+      if (d.id &amp;&amp; !a) err('No se encontró el alumno');
+      if (!a) { a = { id: uid(), creado: hoy(), estado: 'Activo', notas: '' }; db.alumnos.push(a); }
+      a.nombre = nombre; a.celular = txt(d.celular, 15).replace(/[^\d+]/g, ''); a.turno = d.turno;
+      a.modulo = modulo; a.fechaInicio = fecha;
+      if (d.estado === 'Activo' || d.estado === 'Retirado' || d.estado === 'Egresado') a.estado = d.estado;
+      if (d.pagoMatricula) {
+        db.pagos.push({ id: uid(), fecha: hoy(), alumnoId: a.id, concepto: 'Matrícula', monto: Number(d.montoMatricula) || Number(db.config.matricula) || 0, medio: MEDIOS.indexOf(d.medio) &gt;= 0 ? d.medio : 'Efectivo', por: ses.nombre, ts: new Date().toISOString() });
+      }
+      return vista(db, ses);
+    },
+
+    cambiarModulo: function (db, ses, d) {
+      var a = buscar(db.alumnos, d.alumnoId);
+      if (!a || !puede(ses, a.turno)) err('No tienes acceso a este alumno');
+      a.modulo = Math.min(6, Math.max(1, parseInt(d.modulo, 10) || 1));
+      return vista(db, ses);
+    },
+
+    guardarAsistencia: function (db, ses, d) {
+      if (!puede(ses, d.turno)) err('No tienes acceso a este turno');
+      if (!esFecha(d.fecha)) err('Fecha no válida');
+      if (d.fecha &gt; hoy()) err('No puedes marcar asistencia de un día que todavía no llega');
+      var n = 0;
+      (d.registros || []).forEach(function (r) {
+        var a = buscar(db.alumnos, r.alumnoId);
+        if (!a || a.turno !== d.turno || ESTADOS.indexOf(r.estado) &lt; 0) return;
+        var ex = null;
+        for (var i = 0; i &lt; db.asistencia.length; i++) { var x = db.asistencia[i]; if (x.fecha === d.fecha &amp;&amp; String(x.alumnoId) === String(a.id)) { ex = x; break; } }
+        if (ex) { ex.estado = r.estado; ex.turno = d.turno; ex.por = ses.nombre; ex.ts = new Date().toISOString(); }
+        else db.asistencia.push({ id: uid(), fecha: d.fecha, turno: d.turno, alumnoId: a.id, estado: r.estado, por: ses.nombre, ts: new Date().toISOString() });
+        n++;
+      });
+      if (!n) err('No hay alumnos para guardar');
+      return vista(db, ses);
+    },
+
+    agregarNota: function (db, ses, d) {
+      var a = buscar(db.alumnos, d.alumnoId);
+      if (!a || !puede(ses, a.turno)) err('No tienes acceso a este alumno');
+      var t = txt(d.texto, 400);
+      if (!t) err('Escribe la observación');
+      db.notas.push({ id: uid(), fecha: hoy(), alumnoId: a.id, modulo: a.modulo, autor: ses.nombre, texto: t });
+      return vista(db, ses);
+    },
+
+    registrarPago: function (db, ses, d) {
+      soloDueno(ses);
+      var a = buscar(db.alumnos, d.alumnoId);
+      if (!a) err('Elige un alumno');
+      var monto = Number(d.monto);
+      if (!(monto &gt; 0)) err('Escribe el monto');
+      db.pagos.push({ id: uid(), fecha: esFecha(d.fecha) ? d.fecha : hoy(), alumnoId: a.id, concepto: CONCEPTOS.indexOf(d.concepto) &gt;= 0 ? d.concepto : 'Otro', monto: monto, medio: MEDIOS.indexOf(d.medio) &gt;= 0 ? d.medio : 'Efectivo', por: ses.nombre, ts: new Date().toISOString() });
+      return vista(db, ses);
+    },
+
+    borrarPago: function (db, ses, d) {
+      soloDueno(ses);
+      db.pagos = db.pagos.filter(function (p) { return String(p.id) !== String(d.id); });
+      return vista(db, ses);
+    },
+
+    guardarEducador: function (db, ses, d) {
+      soloDueno(ses);
+      var nombre = txt(d.nombre, 50);
+      if (!nombre) err('Escribe el nombre del educador');
+      var pin = txt(d.pin, 8);
+      if (!/^\d{4,8}$/.test(pin)) err('El PIN debe tener de 4 a 8 números');
+      if (pin === String(db.config.pinDueno)) err('Ese PIN ya está en uso');
+      for (var i = 0; i &lt; db.educadores.length; i++) if (String(db.educadores[i].pin) === pin &amp;&amp; String(db.educadores[i].id) !== String(d.id)) err('Ese PIN ya lo tiene otro educador');
+      var turnos = (d.turnos || []).filter(function (t) { return TURNO_IDS.indexOf(t) &gt;= 0; });
+      if (!turnos.length) err('Asígnale al menos un turno');
+      var e = d.id ? buscar(db.educadores, d.id) : null;
+      if (!e) { e = { id: uid() }; db.educadores.push(e); }
+      e.nombre = nombre; e.celular = txt(d.celular, 15).replace(/[^\d+]/g, ''); e.pin = pin; e.turnos = turnos.join(','); e.activo = d.activo === false ? false : true;
+      return vista(db, ses);
+    },
+
+    borrarEducador: function (db, ses, d) {
+      soloDueno(ses);
+      db.educadores = db.educadores.filter(function (e) { return String(e.id) !== String(d.id); });
+      return vista(db, ses);
+    },
+
+    guardarConfig: function (db, ses, d) {
+      soloDueno(ses);
+      ['mensualidad', 'matricula', 'meta'].forEach(function (k) { if (d[k] != null &amp;&amp; Number(d[k]) &gt;= 0) db.config[k] = Number(d[k]); });
+      if (d.pinDueno) {
+        var p = txt(d.pinDueno, 8);
+        if (!/^\d{4,8}$/.test(p)) err('El PIN debe tener de 4 a 8 números');
+        if (db.educadores.some(function (e) { return String(e.pin) === p; })) err('Ese PIN lo usa un educador');
+        db.config.pinDueno = p;
+      }
+      return vista(db, ses);
+    }
+  };
+
+  function ejecutar(db, pin, accion, datos) {
+    var ses = auth(db, pin);
+    if (!ses) err('PIN incorrecto');
+    var fn = acciones[accion];
+    if (!fn) err('Acción desconocida');
+    return fn(db, ses, datos || {});
+  }
+
+  return { TURNO_IDS: TURNO_IDS, auth: auth, ejecutar: ejecutar, hoy: hoy, uid: uid, setHoy: function (f) { hoyFn = f; } };
+})();
+
+
+/* ===== SERVIDOR (Google Apps Script) · Sistema Callao For Men =====
+   Guarda todo en una hoja de Google privada. Cada pedido llega con un PIN:
+   el del dueño ve todo; el de un educador solo recibe los alumnos de sus turnos. */
+
+var SHEET_ID = '1WfRjx0BnOLy3h47_s4-Ts3uAEC9N2rtrrDBo9PJyNE4';
+CORE.setHoy(function () { return Utilities.formatDate(new Date(), 'America/Lima', 'yyyy-MM-dd'); });
+
+var TABLAS = {
+  alumnos:    { hoja: 'Alumnos',    cols: ['id', 'nombre', 'celular', 'turno', 'modulo', 'fechaInicio', 'estado', 'creado', 'notas'] },
+  asistencia: { hoja: 'Asistencia', cols: ['id', 'fecha', 'turno', 'alumnoId', 'estado', 'por', 'ts'] },
+  pagos:      { hoja: 'Pagos',      cols: ['id', 'fecha', 'alumnoId', 'concepto', 'monto', 'medio', 'por', 'ts'] },
+  educadores: { hoja: 'Educadores', cols: ['id', 'nombre', 'celular', 'pin', 'turnos', 'activo'] },
+  notas:      { hoja: 'Notas',      cols: ['id', 'fecha', 'alumnoId', 'modulo', 'autor', 'texto'] }
+};
+var NUMERICOS = { modulo: 1, monto: 1 };
+var CONFIG_DEF = { pinDueno: '', mensualidad: 197, matricula: 59, cuotas: 6, dias: 28, meta: 100 };
+
+function doGet() {
+  return salida({ ok: true, app: 'Sistema Callao For Men', hora: new Date().toISOString() });
+}
+
+function doPost(e) {
+  var req;
+  try { req = JSON.parse(e.postData.contents); } catch (x) { return salida({ ok: false, error: 'Pedido no válido' }); }
+  var lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(25000);
+    var ss = SpreadsheetApp.openById(SHEET_ID);
+    var db = leer(ss);
+    if (!CORE.auth(db, req.pin)) { Utilities.sleep(1200); return salida({ ok: false, error: 'PIN incorrecto' }); }
+    var antes = JSON.stringify(db);
+    var data = CORE.ejecutar(db, req.pin, req.accion, req.datos);
+    if (JSON.stringify(db) !== antes) escribir(ss, db);
+    return salida({ ok: true, data: data });
+  } catch (x) {
+    return salida({ ok: false, error: String(x &amp;&amp; x.message || x) });
+  } finally {
+    try { lock.releaseLock(); } catch (y) {}
+  }
+}
+
+function salida(o) {
+  return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function hoja(ss, nombre, cols) {
+  var sh = ss.getSheetByName(nombre);
+  if (!sh) {
+    sh = ss.insertSheet(nombre);
+    sh.getRange(1, 1, sh.getMaxRows(), Math.max(cols.length, 2)).setNumberFormat('@');
+    sh.getRange(1, 1, 1, cols.length).setValues([cols]).setFontWeight('bold').setBackground('#111111').setFontColor('#e3a72f');
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+function leer(ss) {
+  var db = { config: {} };
+  Object.keys(TABLAS).forEach(function (k) {
+    var t = TABLAS[k], sh = hoja(ss, t.hoja, t.cols);
+    var v = sh.getDataRange().getValues();
+    var head = v.shift() || t.cols;
+    db[k] = v.filter(function (r) { return r[0] !== '' &amp;&amp; r[0] != null; }).map(function (r) {
+      var o = {};
+      head.forEach(function (h, i) { var x = r[i]; o[h] = NUMERICOS[h] ? Number(x) || 0 : (x instanceof Date ? Utilities.formatDate(x, 'America/Lima', 'yyyy-MM-dd') : String(x)); });
+      return o;
+    });
+  });
+  var cs = hoja(ss, 'Config', ['clave', 'valor']);
+  var cv = cs.getDataRange().getValues(); cv.shift();
+  Object.keys(CONFIG_DEF).forEach(function (k) { db.config[k] = CONFIG_DEF[k]; });
+  cv.forEach(function (r) { if (r[0]) db.config[r[0]] = (r[0] === 'pinDueno') ? String(r[1]) : Number(r[1]); });
+  return db;
+}
+
+function escribir(ss, db) {
+  Object.keys(TABLAS).forEach(function (k) {
+    var t = TABLAS[k], sh = hoja(ss, t.hoja, t.cols);
+    var filas = db[k].map(function (o) { return t.cols.map(function (c) { return o[c] == null ? '' : String(o[c]); }); });
+    var n = sh.getLastRow();
+    if (n &gt; 1) sh.getRange(2, 1, n - 1, t.cols.length).clearContent();
+    if (filas.length) {
+      if (sh.getMaxRows() &lt; filas.length + 1) sh.insertRowsAfter(sh.getMaxRows(), filas.length + 1 - sh.getMaxRows());
+      sh.getRange(2, 1, filas.length, t.cols.length).setNumberFormat('@').setValues(filas);
+    }
+  });
+  var cs = hoja(ss, 'Config', ['clave', 'valor']);
+  var rows = Object.keys(db.config).map(function (k) { return [k, String(db.config[k])]; });
+  var m = cs.getLastRow();
+  if (m &gt; 1) cs.getRange(2, 1, m - 1, 2).clearContent();
+  cs.getRange(2, 1, rows.length, 2).setNumberFormat('@').setValues(rows);
+}
+
+/* Prueba: ejecuta esta función una vez desde el editor para autorizar el acceso a la hoja. */
+function instalar() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  escribir(ss, leer(ss));
+  var def = ss.getSheetByName('Hoja 1') || ss.getSheetByName('Sheet1');
+  if (def &amp;&amp; ss.getSheets().length &gt; 1) ss.deleteSheet(def);
+  Logger.log('Listo. Ahora: Implementar &gt; Nueva implementación &gt; Aplicación web.');
+}
+</textarea></li>
+
+  <li><h2>Dale permiso una vez</h2>
+    <ul>
+      <li>Arriba, junto a <b class="k">Ejecutar</b>, elige la función <b class="k">instalar</b> y toca <b class="k">▶ Ejecutar</b>.</li>
+      <li>Toca <b class="k">Revisar permisos</b> y elige tu cuenta.</li>
+      <li>Si sale "Google no verificó esta app": toca <b class="k">Configuración avanzada</b> → <b class="k">Ir a … (no seguro)</b> → <b class="k">Permitir</b>. Es normal: la app es tuya.</li>
+    </ul></li>
+
+  <li><h2>Publícalo como aplicación web</h2>
+    <ul>
+      <li>Arriba a la derecha: <b class="k">Implementar</b> → <b class="k">Nueva implementación</b>.</li>
+      <li>En el engranaje ⚙️ elige <b class="k">Aplicación web</b>.</li>
+      <li><b>Ejecutar como:</b> <b class="k">Yo</b> · <b>Quién tiene acceso:</b> <b class="k">Cualquier usuario</b>.</li>
+      <li>Toca <b class="k">Implementar</b> y copia la <b>URL de la aplicación web</b> (termina en <b>/exec</b>).</li>
+    </ul></li>
+
+  <li><h2>Pega la URL y listo</h2>
+    <input id="url" placeholder="https://script.google.com/macros/s/…/exec" inputmode="url" autocomplete="off">
+    <button class="btn btn-gold" id="probar" type="button">Probar y conectar</button>
+    <div id="res" role="status"></div></li>
+</ol>
+</div>
+<script>
+const ta=document.getElementById('codigo');
+document.getElementById('copiar').onclick=async function(){
+  try{ await navigator.clipboard.writeText(ta.value); }catch(e){ ta.focus(); ta.select(); try{ document.execCommand('copy'); }catch(x){} }
+  this.textContent='✓ Código copiado'; setTimeout(()=>this.textContent='Copiar código',2500);
+};
+document.getElementById('probar').onclick=async function(){
+  const u=document.getElementById('url').value.trim(), res=document.getElementById('res');
+  if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(u)){ res.className='bad'; res.textContent='Esa URL no es la correcta. Debe empezar con https://script.google.com/macros/s/ y terminar en /exec'; return; }
+  res.className=''; res.textContent='Probando conexión…';
+  try{
+    const r=await fetch(u,{method:'POST',body:JSON.stringify({pin:'0',accion:'datos'})}); const j=await r.json();
+    if(j && j.ok===false && /PIN/.test(j.error||'')){
+      try{ localStorage.setItem('cfm_api', JSON.stringify(u)); localStorage.removeItem('cfm_pin'); }catch(e){}
+      res.className='ok'; res.innerHTML='✅ ¡Conectado! Entra con tu PIN de dueño.<br><a class="btn btn-gold" href="./?api='+encodeURIComponent(u)+'">Abrir el sistema</a>';
+    } else { res.className='bad'; res.textContent='Responde, pero no como se esperaba. Revisa que pegaste todo el código y vuelve a implementar.'; }
+  }catch(e){ res.className='bad'; res.textContent='No pude conectarme. Revisa que en "Quién tiene acceso" elegiste "Cualquier usuario" y que copiaste la URL completa.'; }
+};
+</script>
+</body></html>

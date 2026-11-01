@@ -312,7 +312,8 @@ var CORE = (function () {
   var MEDIOS = ['Efectivo', 'Yape', 'Plin', 'Transferencia'];
 
   function pad(n) { return (n < 10 ? '0' : '') + n; }
-  function hoy() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  var hoyFn = null;
+  function hoy() { if (hoyFn) return hoyFn(); var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
   function txt(v, max) { return String(v == null ? '' : v).trim().slice(0, max || 120); }
   function esFecha(s) { return /^\d{4}-\d{2}-\d{2}$/.test(String(s)); }
@@ -467,7 +468,7 @@ var CORE = (function () {
     return fn(db, ses, datos || {});
   }
 
-  return { TURNO_IDS: TURNO_IDS, auth: auth, ejecutar: ejecutar, hoy: hoy, uid: uid };
+  return { TURNO_IDS: TURNO_IDS, auth: auth, ejecutar: ejecutar, hoy: hoy, uid: uid, setHoy: function (f) { hoyFn = f; } };
 })();
 
 </script>
@@ -501,9 +502,10 @@ const EST = {
 const CONCEPTOS = ['Mensualidad','Matrícula','Especialización','Otro'];
 const MEDIOS = ['Efectivo','Yape','Plin','Transferencia'];
 const WA_ESCUELA = '51936967506';
-const APP_URL = 'https://callaoformen.github.io/escuela/sistema/';
+const APP_BASE = 'https://callaoformen.github.io/escuela/sistema/';
 
 /* =================== UTILIDADES =================== */
+function appUrl(){ return (!API_FIJA && API_ACTIVA) ? APP_BASE+'?api='+encodeURIComponent(API_ACTIVA) : APP_BASE; }
 const $ = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -536,7 +538,10 @@ const ICON = {
 };
 
 /* =================== CONEXIÓN =================== */
-const DEMO = !API_URL || API_URL.indexOf('__')===0;
+const API_FIJA = (API_URL && API_URL.indexOf('__')!==0) ? API_URL : '';
+(function(){ try{ const u=new URL(location.href); const a=u.searchParams.get('api'); if(a && /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(a)){ localStorage.setItem('cfm_api', JSON.stringify(a)); u.searchParams.delete('api'); history.replaceState(null,'',u.pathname+u.search); } }catch(e){} })();
+const API_ACTIVA = API_FIJA || lsGet('cfm_api','');
+const DEMO = !API_ACTIVA;
 const DEMO_KEY = 'cfm_sistema_demo_v2';
 const API = {
   async call(accion, datos){
@@ -551,7 +556,7 @@ const API = {
     const ctrl = new AbortController(); const tm = setTimeout(()=>ctrl.abort(), 30000);
     let r;
     try{
-      r = await fetch(API_URL, { method:'POST', body: JSON.stringify({ pin, accion, datos }), signal: ctrl.signal });
+      r = await fetch(API_ACTIVA, { method:'POST', body: JSON.stringify({ pin, accion, datos }), signal: ctrl.signal });
     }catch(e){ throw new Error('Sin conexión. Revisa tu internet e inténtalo otra vez.'); }
     finally{ clearTimeout(tm); }
     const j = await r.json().catch(()=>({ok:false,error:'Respuesta no válida del servidor'}));
@@ -715,7 +720,7 @@ function vLogin(){
       <div class="role"><b>Dirección</b><span>Ve toda la escuela: turnos, alumnos, pagos y equipo.</span></div>
       <div class="role"><b>Educador</b><span>Ve solo su turno: alumnos, módulos y asistencia.</span></div>
     </div>
-    ${DEMO?`<div class="demo-note"><b>Prueba ahora:</b> PIN <b>1234</b> para entrar como dueño · PIN <b>1111</b> para entrar como educador del turno lunes y miércoles.</div>`:''}
+    ${DEMO?`<div class="demo-note"><b>Prueba ahora:</b> PIN <b>1234</b> para entrar como dueño · PIN <b>1111</b> para entrar como educador del turno lunes y miércoles.<br><a href="instalar.html" style="color:var(--gold-soft)">¿Listo para usarlo de verdad? Conéctalo con Google ›</a></div>`:''}
   </form></div>`;
 }
 
@@ -987,7 +992,7 @@ function vEquipo(){
         <div class="meta" style="display:flex;flex-wrap:wrap;gap:6px">${ts.map(id=>`<span class="badge" style="background:${TMAP[id].color}22;color:${TMAP[id].color}">${TMAP[id].ic} ${esc(tNombre(id))}</span>`).join('')}</div>
         <div class="row"><span class="small muted">PIN</span><span class="pinbox num">${S.verPin[e.id]?esc(e.pin):'••••'}</span><button class="btn btn-ghost btn-sm" data-act="verPin" data-id="${e.id}">${S.verPin[e.id]?'Ocultar':'Ver'}</button></div>
         <div class="btn-row">
-          ${on?`<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="${waLink(e.celular, `Hola ${e.nombre.split(' ')[0]}, este es tu acceso al sistema de la Escuela Callao For Men.\n\n👉 ${APP_URL}\n🔑 Tu PIN: ${e.pin}\n\nAhí verás tu turno (${ts.map(tNombre).join(', ')}), tus alumnos por módulo y podrás tomar asistencia. No compartas tu PIN.`)}">Enviar acceso</a>`:''}
+          ${on?`<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="${waLink(e.celular, `Hola ${e.nombre.split(' ')[0]}, este es tu acceso al sistema de la Escuela Callao For Men.\n\n👉 ${appUrl()}\n🔑 Tu PIN: ${e.pin}\n\nAhí verás tu turno (${ts.map(tNombre).join(', ')}), tus alumnos por módulo y podrás tomar asistencia. No compartas tu PIN.`)}">Enviar acceso</a>`:''}
           <button class="btn btn-ghost btn-sm" data-act="editEdu" data-id="${e.id}">Editar</button>
         </div>
       </div>`;}).join('') : `<div class="notice">Todavía no agregaste educadores. Agrega uno, elige su turno y mándale su PIN por WhatsApp.</div>`}</div>`;
@@ -1007,7 +1012,7 @@ function vAjustes(){
       <button class="btn btn-gold btn-block" type="submit">Guardar ajustes</button>
     </form>
     <div class="card" style="margin-top:12px"><b>Conexión</b><p class="small muted" style="margin:6px 0 0">${DEMO?'Modo demostración: los datos son de ejemplo y se guardan solo en este celular.':'Conectado a Google: los datos se guardan en la hoja privada de la escuela.'}</p>
-      ${DEMO?`<button class="btn btn-ghost btn-sm" style="margin-top:10px" data-act="reiniciarDemo">Volver a cargar datos de ejemplo</button>`:''}</div>`;
+      ${DEMO?`<div class="btn-row" style="margin-top:10px"><a class="btn btn-gold btn-sm" href="instalar.html">Conectar con Google</a><button class="btn btn-ghost btn-sm" data-act="reiniciarDemo">Recargar datos de ejemplo</button></div>`:''}</div>`;
 }
 
 /* =================== HOJAS (formularios y perfil) =================== */
