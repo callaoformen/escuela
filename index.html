@@ -120,6 +120,24 @@ section{padding:64px 0}
 }
 @media (prefers-reduced-motion:reduce){.step-tag.swap{animation:none}}
 
+
+/* Botón flotante de matrícula */
+.promo-wrap{display:flex;justify-content:center;margin-top:30px}
+.promo-btn{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--ink);background:linear-gradient(135deg,#f3cf7a 0%,#e3a72f 55%,#c98d1c 100%);border-radius:22px;padding:22px 34px 18px;min-width:min(100%,360px);text-align:center;box-shadow:0 14px 40px rgba(227,167,47,.35),0 0 0 6px rgba(227,167,47,.15)}
+.promo-btn:hover{filter:brightness(1.06)}
+.promo-tag{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#d62e2e;color:#fff;font-family:var(--display);font-size:14px;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:999px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+.promo-main{font-family:var(--display);font-size:20px;text-transform:uppercase;line-height:1.1;margin-top:4px}
+.promo-main s{opacity:.7}
+.promo-price{font-family:var(--display);font-size:56px;font-weight:700;line-height:1;white-space:nowrap}
+.promo-cta{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.04em;background:var(--ink);color:var(--gold-soft);border-radius:999px;padding:9px 18px;margin-top:6px}
+.promo-cta svg{width:18px;height:18px}
+@media (prefers-reduced-motion:no-preference){
+  .promo-btn{animation:flotar 2.6s ease-in-out infinite}
+  @keyframes flotar{0%,100%{transform:translateY(0);box-shadow:0 14px 40px rgba(227,167,47,.35),0 0 0 6px rgba(227,167,47,.15)}50%{transform:translateY(-8px);box-shadow:0 24px 50px rgba(227,167,47,.45),0 0 0 12px rgba(227,167,47,.08)}}
+  .promo-tag{animation:latir 1.4s ease-in-out infinite}
+  @keyframes latir{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.08)}}
+}
+
 /* Cinta en movimiento */
 .ticker{background:var(--gold);color:var(--ink);overflow:hidden;white-space:nowrap;border-block:1px solid #b7831f}
 .ticker-track{display:inline-flex;gap:0;padding:14px 0;font-family:var(--display);font-size:18px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
@@ -454,6 +472,16 @@ footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-s
         <p class="goal">Al terminar: sales certificado y listo para trabajar o abrir tu propio negocio.</p>
       </li>
     </ol>
+    <div class="promo-wrap">
+      <a class="promo-btn" href="https://wa.me/51936967506?text=%5BMATR%C3%8DCULA%20PROMO%20S%2F%2059%5D%20Hola%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20separar%20mi%20vacante%20con%20la%20matr%C3%ADcula%20a%20S%2F%2059." target="_blank" rel="noopener">
+        <span class="promo-tag">Solo por hoy</span>
+        <span class="promo-main">Matrícula · antes <s>S/ 100</s></span>
+        <span class="promo-price">S/ 59</span>
+        <span class="promo-cta">Separar mi vacante
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+    </div>
   </div>
 </section>
 
