@@ -697,7 +697,7 @@ function render(){
     ${DEMO?`<div class="demo-bar">Modo demostración · datos de ejemplo guardados solo en este celular</div>`:''}
     <header class="topbar"><div class="wrap">
       <img src="../img/logo.png" alt="">
-      <div class="who"><small>${dueno?'Panel del director':'Panel del educador'}</small><b>${esc(S.data.sesion.nombre)}</b></div>
+      <div class="who"><small>${dueno?'Panel del director':'Panel del educador'}</small><b>${dueno?'Director':esc(S.data.sesion.nombre)}</b></div>
       ${dueno?`<button class="icon-btn" data-act="ir" data-v="ajustes" aria-label="Ajustes">⚙️</button>`:''}
       <button class="btn btn-ghost btn-sm" data-act="salir">Salir</button>
     </div></header>
@@ -717,7 +717,7 @@ function vLogin(){
     <input id="pin" class="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" placeholder="••••" required>
     <button class="btn btn-gold btn-block" style="margin-top:14px;min-height:56px;font-size:17px" type="submit">Entrar</button>
     <div class="roles">
-      <div class="role"><b>Dirección</b><span>Ve toda la escuela: turnos, alumnos, pagos y equipo.</span></div>
+      <div class="role" style="display:grid;place-items:center"><b style="font-size:18px">Director</b></div>
       <div class="role"><b>Educador</b><span>Ve solo su turno: alumnos, módulos y asistencia.</span></div>
     </div>
     ${DEMO?`<div class="demo-note"><b>Prueba ahora:</b> PIN <b>1234</b> para entrar como dueño · PIN <b>1111</b> para entrar como educador del turno lunes y miércoles.<br><a href="instalar.html" style="color:var(--gold-soft)">¿Listo para usarlo de verdad? Conéctalo con Google ›</a></div>`:''}
