@@ -165,6 +165,7 @@ footer a{color:var(--muted)}
   </footer>
 </main>
 
+<script src="../malla/malla.js"></script>
 <script>
 /* ===== CONTENIDO DEL AULA =====
    Para agregar un video de clase: súbelo a la carpeta vid/ y añádelo en "videos" del módulo:
@@ -202,6 +203,9 @@ const MODULOS = [
 ];
 
 /* ===== Guardado en este celular (si el navegador lo permite) ===== */
+/* Técnicas sincronizadas con la malla curricular (malla/malla.js): 8 clases por módulo */
+if(window.MALLA){ window.MALLA.modulos.forEach(x=>{ const m=MODULOS.find(y=>y.id==="m"+x.n); if(m){ m.titulo=x.titulo; m.tecnicas=x.clases.map((c,i)=> i===x.clases.length-1 ? "Aprobé la evaluación del módulo" : "Clase "+(i+1)+": "+c.t); } }); }
+
 const mem = {};
 function load(k, d){ try{ const v = localStorage.getItem("cfm_aula_"+k); return v===null ? d : JSON.parse(v); }catch(e){ return k in mem ? mem[k] : d; } }
 function save(k, v){ mem[k]=v; try{ localStorage.setItem("cfm_aula_"+k, JSON.stringify(v)); }catch(e){} }
