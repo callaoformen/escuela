@@ -11,7 +11,7 @@
      mat  materiales que deben traer / tener listos
 */
 window.MALLA = {
-  version: "2026-11-06e",
+  version: "2026-11-06f",
   horasPorClase: 3,
   clasesPorModulo: 8,
   estructuraClase: [
@@ -247,7 +247,7 @@ window.MALLA = {
     },
     {
       n: 5, titulo: "Diseños y freestyle", color: "#f2784b",
-      competencia: "Hace líneas y diseños con trimmer y navaja sobre degradado, con velocidad y precisión, y atiende público real en campañas.",
+      competencia: "Hace líneas y diseños con trimmer y navaja sobre degradado, con velocidad y precisión, y se prepara para competir en freestyle.",
       meta: "Domina los diseños que se ven en redes",
       evaluacion: "Degradado con diseño en modelo, con líneas limpias y simétricas, en tiempo profesional.",
       clases: [
@@ -287,12 +287,12 @@ window.MALLA = {
           prac: "Cortes cronometrados en modelos.",
           eval: "Fade con diseño en 60 minutos.",
           mat: "Kit completo, cronómetro, modelos." },
-        { t: "Campaña de corte con público", a: "Práctica real atendiendo público en campaña con el Gobierno Regional de Piura.",
-          obj: "Que el alumno atienda público real con rapidez y buena atención.",
-          demo: "Organización de la campaña: estaciones, turnos e higiene.",
-          prac: "Atención a público en la campaña.",
-          eval: "Atiende a varios clientes con calidad y buen trato.",
-          mat: "Kit completo, capa, polo de la escuela." },
+        { t: "Preparación para competencia de freestyle", a: "Te preparamos para competir en freestyle: corte degradado más un diseño freestyle de líneas al azar, con tiempo.",
+          obj: "Que el alumno o alumna esté listo para una competencia: degradado limpio más diseño freestyle, en el tiempo de competencia.",
+          demo: "Cómo es una competencia de freestyle: tiempo, criterios del jurado y orden de trabajo. Corte degradado más diseño freestyle con líneas al azar.",
+          prac: "Simulacro de competencia: cada alumno o alumna hace un degradado más un diseño freestyle con tiempo.",
+          eval: "Degradado sin marcas y diseño freestyle limpio y creativo, terminado dentro del tiempo.",
+          mat: "Kit completo, trimmer, navaja, cronómetro, modelo." },
         { t: "Evaluación del Módulo 5", a: "Demuestras un degradado con diseño en modelo real.",
           obj: "Comprobar que el alumno está listo para el Módulo 6.",
           demo: "Explica el criterio de evaluación.",
