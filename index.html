@@ -8,7 +8,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://callaoformen.github.io/escuela/">
 <meta property="og:title" content="Escuela de Barbería Callao For Men · Piura">
-<meta property="og:description" content="Conviértete en barbero profesional en 6 meses. Matrícula S/ 59 · Mensualidad S/ 197 · Certificado con la Municipalidad de Castilla.">
+<meta property="og:description" content="Conviértete en barbero o lady barber profesional en 6 meses. Matrícula S/ 59 · Mensualidad S/ 197 · Certificado con la Municipalidad de Castilla.">
 <meta property="og:image" content="https://callaoformen.github.io/escuela/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -68,6 +68,7 @@ section{padding:64px 0}
 .hero-inner{display:grid;gap:22px;justify-items:center;text-align:center}
 .logo{width:150px}
 .hero h1{font-size:clamp(38px,9.5vw,74px);max-width:15ch}
+.hero h1 .o-lady{white-space:nowrap}
 .shine{background:linear-gradient(100deg,var(--gold) 0%,var(--gold-soft) 25%,#fff3cf 50%,var(--gold-soft) 75%,var(--gold) 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero .lead{text-align:center;margin:0 auto;color:#d8cfbf}
 .prices{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
@@ -346,7 +347,7 @@ footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-s
     <div class="h-top">
       <img class="logo escudo" src="img/escudo.png" alt="Callao For Men Piura, Barbería y Escuela" width="200" height="176">
       <p class="kicker">Escuela de barbería · Castilla, Piura</p>
-      <h1>Conviértete en barbero profesional <span class="shine">en 6 meses</span></h1>
+      <h1>Conviértete en barbero <span class="o-lady">o lady barber</span> profesional <span class="shine">en 6 meses</span></h1>
     </div>
     <figure class="demo">
       <div class="phone">
@@ -702,7 +703,7 @@ document.querySelectorAll('.vwrap .play').forEach(function(b){
       '</div>';
     if(cur===0) root.querySelector('[data-go="-1"]').textContent='← Anterior';
     if(cur===M.length-1) root.querySelector('[data-go="1"]').textContent='Siguiente →';
-    var t=root.querySelector('#mt'+cur); if(t){ t.scrollIntoView({block:'nearest',inline:'nearest'}); if(focus) t.focus(); }
+    var t=root.querySelector('#mt'+cur), bar=root.querySelector('.m-tabs'); if(t&&bar){ bar.scrollLeft=Math.max(0,t.offsetLeft-bar.offsetLeft-(bar.clientWidth-t.offsetWidth)/2); if(focus) t.focus({preventScroll:true}); }
   }
   root.addEventListener('click',function(e){
     var b=e.target.closest('.m-tab'); if(b){ cur=+b.dataset.i; render(true); return; }
