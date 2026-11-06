@@ -341,7 +341,7 @@ main{padding:18px 0 110px;overflow-x:hidden}
 <div id="sheet" class="sheet-wrap" hidden></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<script src="../malla/malla.js?v=20261106b"></script>
+<script src="../malla/malla.js?v=20261106c"></script>
 <script>
 /* Dirección del servidor de Google. Vacío = modo demostración (datos de ejemplo guardados en este celular). */
 const API_URL = "https://script.google.com/macros/s/AKfycby9mEIicbYzz2gX9xVLQ3mnxD7CmEesgwzxn2QB8ZxIzBrpFPFZBug4gTg-_Vt9sA4Qug/exec";
@@ -529,7 +529,7 @@ const TMAP = Object.fromEntries(TURNOS.map(t=>[t.id,t]));
 const tNombre = id => { const t=TMAP[id]; if(!t) return id; return t.id==='DFD' ? 'Domingo Full Day' : `${t.dias} · ${t.franja}`; };
 const MODULOS = [
   { n:1, titulo:'Fundamentos', color:'#4fa3f7', meta:'Corta su primera estructura completa', temas:['Bioseguridad y enfermedades del cuero cabelludo (dermatitis, psoriasis, tiña)','Tipos de rostro, perfil, cabello y cráneo','Afeitado con globos y espuma','Mantenimiento de máquinas','Corte con tijera en cabezal: estructura, línea de perfil y radial, ángulos y grados'] },
-  { n:2, titulo:'Cortes en tendencia y puntillismo', color:'#2ec4b6', meta:'Hace los cortes que más piden los clientes', temas:['Uso de máquina, guías y patillera','Cortes en tendencia','Técnica de puntillismo','Práctica con modelos reales'] },
+  { n:2, titulo:'Corte clásico e inicio al degradado', color:'#2ec4b6', meta:'Domina el corte clásico y el degradado medio y alto', temas:['Medidas de peinetas y patillera','Corte clásico con una y dos peinetas, con marcaciones','Peine sobre máquina y tijera sobre peine','Textura en la parte superior','Degradado medio (mid fade) con modelo real','Degradado alto (high fade)'] },
   { n:3, titulo:'Tapers y degradados', color:'#8bc34a', meta:'Degradado limpio de principio a fin', temas:['Blow out taper','Degradado bajo (low fade)','Mid fade y skin fade','Fade creativo'] },
   { n:4, titulo:'Cortes modernos y acabados', color:'#e3a72f', meta:'Entrega cada corte peinado y terminado', temas:['Tijera sobre peine y texturizados','Corte ideal según tipo de rostro','Perfilado de barba y cejas','Productos de acabado para clientes'] },
   { n:5, titulo:'Diseños y freestyle', color:'#f2784b', meta:'Domina los diseños que se ven en redes', temas:['Líneas y diseños con trimmer y navaja','Freestyle sobre degradado','Velocidad y precisión','Práctica en campañas de corte'] },
