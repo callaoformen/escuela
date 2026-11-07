@@ -852,12 +852,13 @@ const app = $('#app');
 function render(){
   if(!S.data){ app.innerHTML = vLogin(); setTimeout(()=>$('#pin')?.focus(), 50); return; }
   const dueno = esDueno(), alumno = esAlumno();
-  const navItems = alumno ? [['mi','Mi curso','home'],['mispagos','Mis pagos','pagos'],['misclases','Asistencia','check']] : dueno
+  const navItems = alumno ? [['mi','Inicio','home'],['temario','Clases','guia'],['mispagos','Pagos','pagos'],['misclases','Asistencia','check']] : dueno
     ? [['inicio','Inicio','home'],['turnos','Turnos','turnos'],['asistencia','Asistencia','check'],['alumnos','Alumnos','alumnos'],['pagos','Pagos','pagos'],['equipo','Equipo','equipo']]
     : [['turno','Mi turno','turnos'],['asistencia','Asistencia','check'],['guia','Guía','guia'],['alumnos','Alumnos','alumnos']];
   let body = '';
   switch(S.vista){
     case 'mi': body = vMiCurso(); break;
+    case 'temario': body = vTemario(); break;
     case 'mispagos': body = vMisPagos(); break;
     case 'misclases': body = vMisClases(); break;
     case 'inicio': body = vInicio(); break;
@@ -915,8 +916,38 @@ function vMiCurso(){
       <div class="stepper">${MODULOS.map(x=>`<div class="step ${x.n<m.n?'done':x.n===m.n?'cur':''}" style="--mc:${x.color}"><i>${x.n<m.n?'✓':x.n}</i>Mes ${x.n}</div>`).join('')}</div>
       <p style="margin:10px 0 0"><b style="color:${m.color}">Estás en el Módulo ${m.n}: ${esc(m.titulo)}</b></p>
       <p class="small muted" style="margin:4px 0 0">🎯 ${esc(m.meta)}</p>
-      <a class="btn btn-line btn-sm btn-block" style="margin-top:12px" href="../aula/">Ver el temario en el aula virtual</a>
-    </div>`;
+      <button class="btn btn-line btn-sm btn-block" style="margin-top:12px" data-act="verTemario" data-m="${m.n}">Ver las clases de mi módulo</button>
+    </div>
+    <a class="price-card" style="text-decoration:none;color:inherit;margin-top:12px" href="https://www.instagram.com/callaoformenpiura/" target="_blank" rel="noopener">
+      <span class="pc-ic">📸</span>
+      <span class="pc-tx"><span>Comparte tu trabajo</span><b style="font-size:17px">@callaoformenpiura</b><span>Sube tus mejores cortes y etiquétanos en Instagram y TikTok.</span></span>
+      <span style="font-size:26px;color:var(--gold)">›</span>
+    </a>`;
+}
+function vTemario(){
+  const a = yo(); if(!a) return '';
+  if(!window.MALLA) return `<div class="notice warn">No se pudo cargar el temario. Revisa tu conexión y vuelve a abrir.</div>`;
+  const actual = Number(a.modulo)||1;
+  if(!S.temMod) S.temMod = actual;
+  const m = MALLA_MOD(S.temMod) || window.MALLA.modulos[0];
+  const estado = n => n<actual ? 'Hecho ✓' : n===actual ? 'Ahora' : 'Próximo';
+  return `<div class="page-title"><div><p class="kicker">Tu temario</p><h1>Mis clases</h1><p>6 módulos, uno por mes. Cada módulo tiene 8 clases de 3 horas. Toca una clase para ver lo que vas a aprender.</p></div></div>
+    <div class="g-mods" role="group" aria-label="Módulo">${window.MALLA.modulos.map(x=>`<button class="g-mod" data-act="temMod" data-m="${x.n}" aria-pressed="${x.n===m.n}" style="--mc:${x.color}"><b>${x.n<actual?'✓':x.n}</b><span>${estado(x.n)}</span></button>`).join('')}</div>
+    <section class="g-head" style="--mc:${m.color}">
+      <span class="g-badge">Módulo ${m.n} · Mes ${m.n}</span> ${m.n===actual?'<span class="badge b-gold" style="margin-left:6px">📍 Estás aquí</span>':m.n<actual?'<span class="badge b-ok" style="margin-left:6px">Ya lo pasaste</span>':''}
+      <h2>${esc(m.titulo)}</h2>
+      <p>${esc(m.competencia)}</p>
+      <div class="g-facts"><span>${m.clases.length} clases</span><span>${m.clases.length*(window.MALLA.horasPorClase||3)} horas</span><span>🎯 ${esc(m.meta)}</span></div>
+    </section>
+    <div class="g-list" style="margin-top:12px">${m.clases.map((c,i)=>`
+      <details class="g-clase" style="--mc:${m.color}">
+        <summary><span class="g-n">${i+1}</span><span class="g-t"><small>Clase ${i+1}</small>${esc(c.t)}</span><span class="g-chev">›</span></summary>
+        <dl>
+          <div class="g-al"><dt>Lo que vas a aprender</dt><dd>${esc(c.a||'')}</dd></div>
+          ${c.mat?`<div class="g-al"><dt>Qué debes traer</dt><dd>${esc(c.mat)}</dd></div>`:''}
+        </dl>
+      </details>`).join('')}</div>
+    ${m.evaluacion?`<div class="g-evalm" style="--mc:${m.color}"><b>Cómo te evaluamos al final del módulo</b><p>${esc(m.evaluacion)}</p></div>`:''}`;
 }
 function vMisPagos(){
   const a = yo(); if(!a) return '';
@@ -950,7 +981,7 @@ function vLogin(){
     <div class="roles">
       <div class="role" style="display:grid;place-items:center"><b style="font-size:18px">Director</b></div>
       <div class="role"><b>Educador</b><span>Ve solo su turno: alumnos, módulos y asistencia.</span></div>
-      <div class="role" style="grid-column:1/-1"><b>Alumno</b><span>Ve su cronograma de pagos, sus próximas cuotas y sus asistencias.</span></div>
+      <div class="role" style="grid-column:1/-1"><b>Alumno</b><span>Ve sus clases, su cronograma de pagos y sus asistencias.</span></div>
     </div>
     ${DEMO?`<div class="demo-note"><b>Prueba ahora:</b> PIN <b>1234</b> para entrar como dueño · PIN <b>1111</b> para entrar como educador del turno lunes y miércoles · PIN <b>123456</b> para entrar como alumno.<br><a href="instalar.html" style="color:var(--gold-soft)">¿Listo para usarlo de verdad? Conéctalo con Google ›</a></div>`:''}
   </form></div>`;
@@ -1420,9 +1451,9 @@ function htmlPagos(a, editable){
       ${editable?`<button class="btn btn-gold btn-sm btn-block" style="margin-top:10px" data-act="nuevoPago" data-id="${a.id}">+ Registrar pago</button>`:`<a class="btn btn-wa btn-sm btn-block" style="margin-top:10px" target="_blank" rel="noopener" href="${waLink(WA_ESCUELA, `[ALUMNO - PAGOS] Hola, soy ${a.nombre} y tengo una consulta sobre mis pagos.`)}">Consultar mis pagos por WhatsApp</a>`}</div>`; }
 function htmlAcceso(a){
   const tiene = !!a.pin, ver = S.verPinAl===a.id, nom = a.nombre.split(' ')[0];
-  const msg = `Hola ${nom}, ya tienes tu cuenta en la Escuela Callao For Men 💈\n\nAhí ves tu cronograma de pagos, tus próximas cuotas y tus asistencias.\n\n👉 ${appUrl()}\n🔑 Tu PIN: ${a.pin}\n\nNo compartas tu PIN con nadie.`;
+  const msg = `Hola ${nom}, ya tienes tu cuenta en la Escuela Callao For Men 💈\n\nAhí ves tus clases y tu temario, tu cronograma de pagos y tus asistencias, todo en un solo lugar.\n\n👉 ${appUrl()}\n🔑 Tu PIN: ${a.pin}\n\nNo compartas tu PIN con nadie.`;
   return `<div class="box"><h3>Acceso del alumno</h3>
-    <p class="small muted" style="margin:0 0 10px">Con su PIN, ${esc(nom)} entra al sistema y ve <b style="color:var(--text)">solo lo suyo</b>: su cronograma de pagos, sus próximas cuotas y sus asistencias. No puede cambiar nada.</p>
+    <p class="small muted" style="margin:0 0 10px">Con su PIN, ${esc(nom)} entra al sistema y ve <b style="color:var(--text)">solo lo suyo</b>: sus clases y temario, su cronograma de pagos y sus asistencias. No puede cambiar nada.</p>
     ${tiene?`<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span class="small muted">PIN</span><span class="pinbox num">${ver?esc(a.pin):'••••••'}</span><button class="btn btn-ghost btn-sm" data-act="verPinAl" data-id="${a.id}">${ver?'Ocultar':'Ver'}</button></div>
       <div class="btn-row" style="margin-top:10px">
         ${a.celular?`<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="${waLink(a.celular, msg)}">Enviar acceso por WhatsApp</a>`:'<span class="small dim">Agrega su celular en Editar datos para enviarle el acceso.</span>'}
@@ -1700,6 +1731,8 @@ document.addEventListener('click', async e=>{
     case 'editEdu': hojaEdu(id); break;
     case 'borrarEdu': if(confirmar('¿Eliminar a este educador? Ya no podrá entrar.') && await ejecutar('borrarEducador', { id }, 'Educador eliminado')){ cerrarHoja(); render(); } break;
     case 'verPin': S.verPin[id]=!S.verPin[id]; render(); break;
+    case 'temMod': S.temMod = Number(b.dataset.m); render(); break;
+    case 'verTemario': S.temMod = Number(b.dataset.m)||null; S.vista='temario'; window.scrollTo(0,0); render(); break;
     case 'verPinAl': S.verPinAl = S.verPinAl===id ? null : id; hojaPerfil(id); break;
     case 'pinAl': {
       const a = S.data.alumnos.find(x=>x.id===id); if(!a) break;
@@ -1720,7 +1753,7 @@ function confirmar(m){ try{ return window.confirm(m); }catch(e){ return true; } 
 
 /* =================== AUTO-ACTUALIZACIÓN =================== */
 /* Si el celular tiene guardada una versión vieja de la página, se recarga sola con la nueva. */
-const VERSION_APP = '20261107130729';
+const VERSION_APP = '20261107131647';
 (function(){
   try{
     fetch(location.pathname + '?_=' + Date.now(), { cache:'no-store' }).then(r=>r.text()).then(t=>{
