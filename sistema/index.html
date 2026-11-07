@@ -321,6 +321,57 @@ main{padding:18px 0 110px;overflow-x:hidden}
 .agenda-day{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:13px;color:var(--gold-soft);padding:12px 0 2px;display:flex;justify-content:space-between;gap:8px}
 .agenda-day span{color:var(--muted);text-transform:none;letter-spacing:0;font-family:var(--body)}
 .quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+/* Asistencia por fechas */
+.as-turnos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+@media(min-width:720px){.as-turnos{grid-template-columns:repeat(3,1fr)}}
+.as-t{display:flex;align-items:center;gap:10px;text-align:left;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--tc);border-radius:14px;padding:10px 12px;min-height:58px}
+.as-t b{display:block;font-size:14px;line-height:1.15}
+.as-t span{font-size:12px;color:var(--muted)}
+.as-t[aria-pressed="true"]{background:color-mix(in srgb,var(--tc) 18%,var(--panel));border-color:var(--tc)}
+.as-t .ic{font-size:20px}
+.as-t .pend{margin-left:auto;flex:0 0 auto}
+.cal{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px}
+.cal-h{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cal-h h3{font-size:18px}
+.cal-h .icon-btn:disabled{opacity:.3}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px}
+.cal-w{font-size:11px;text-align:center;color:var(--dim);font-family:var(--display);letter-spacing:.06em;padding-bottom:2px}
+.cal-d{min-height:48px;border-radius:11px;border:1px solid transparent;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:14px;color:var(--dim);padding:2px 0;font-variant-numeric:tabular-nums}
+.cal-d.clase{background:var(--panel-2);border-color:var(--line);color:var(--text);font-weight:600}
+.cal-d.ok{background:rgba(92,201,138,.15);border-color:rgba(92,201,138,.5);color:#bff0d2}
+.cal-d.pend{background:rgba(240,180,60,.14);border-color:rgba(240,180,60,.55);color:#f8d68a}
+.cal-d.extra{background:rgba(122,167,255,.12);border-color:rgba(122,167,255,.4);color:#c5d7ff}
+.cal-d.hoy{box-shadow:inset 0 0 0 2px var(--gold)}
+.cal-d.sel{outline:3px solid var(--gold-soft);outline-offset:1px}
+.cal-d.fut{opacity:.4}
+.cal-d small{font-size:10px;font-weight:700;line-height:1}
+.cal-d:disabled{cursor:default}
+.cal-leg{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:12px;font-size:12px;color:var(--muted)}
+.cal-leg i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-2px;margin-right:5px;border:1px solid var(--line)}
+.cal-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px;text-align:center}
+.cal-sum div{background:var(--panel-2);border-radius:12px;padding:8px 4px}
+.cal-sum b{display:block;font-family:var(--display);font-size:20px}
+.cal-sum span{font-size:11px;color:var(--muted)}
+.as-day{margin-top:16px;scroll-margin-top:76px}
+/* Clases del alumno (perfil) */
+.cl-list{margin-top:8px}
+.cl-row{display:grid;grid-template-columns:42px 1fr auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.cl-row:first-child{border-top:0}
+.cl-n{width:42px;height:42px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--panel-3);font-family:var(--display);font-size:15px;line-height:1;color:var(--muted)}
+.cl-n small{font-size:9px;font-family:var(--body);letter-spacing:.04em}
+.cl-row.A .cl-n{background:rgba(92,201,138,.2);color:#8be0ae}.cl-row.T .cl-n{background:rgba(240,180,60,.2);color:#f5c869}
+.cl-row.F .cl-n{background:rgba(239,91,91,.22);color:#ff8f8f}.cl-row.J .cl-n{background:rgba(122,167,255,.2);color:#a9c4ff}
+.cl-row.sin .cl-n{background:rgba(240,180,60,.12);color:#f8d68a;box-shadow:inset 0 0 0 1px rgba(240,180,60,.5)}
+.cl-row.fut{opacity:.6}
+.cl-tx b{display:block;font-size:14px}
+.cl-tx span{font-size:12px;color:var(--muted)}
+.cl-btns{display:flex;gap:4px}
+.cl-btns button{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);font-size:14px;font-weight:700;color:var(--muted)}
+.cl-btns button[aria-pressed="true"][data-e="A"]{background:var(--ok);color:#06210f;border-color:var(--ok)}
+.cl-btns button[aria-pressed="true"][data-e="T"]{background:var(--warn);color:#241703;border-color:var(--warn)}
+.cl-btns button[aria-pressed="true"][data-e="F"]{background:var(--bad);color:#2a0606;border-color:var(--bad)}
+.cl-btns button[aria-pressed="true"][data-e="J"]{background:var(--info);color:#071431;border-color:var(--info)}
+.cl-btns button:disabled{opacity:.35}
 
 /* Guía de clases */
 .g-mods{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-bottom:12px}
@@ -768,14 +819,14 @@ function render(){
   if(!S.data){ app.innerHTML = vLogin(); setTimeout(()=>$('#pin')?.focus(), 50); return; }
   const dueno = esDueno();
   const navItems = dueno
-    ? [['inicio','Inicio','home'],['turnos','Turnos','turnos'],['alumnos','Alumnos','alumnos'],['pagos','Pagos','pagos'],['equipo','Equipo','equipo']]
+    ? [['inicio','Inicio','home'],['turnos','Turnos','turnos'],['asistencia','Asistencia','check'],['alumnos','Alumnos','alumnos'],['pagos','Pagos','pagos'],['equipo','Equipo','equipo']]
     : [['turno','Mi turno','turnos'],['asistencia','Asistencia','check'],['guia','Guía','guia'],['alumnos','Alumnos','alumnos']];
   let body = '';
   switch(S.vista){
     case 'inicio': body = vInicio(); break;
     case 'turnos': body = vTurnos(); break;
     case 'turno': body = vTurno(); break;
-    case 'asistencia': S.tab='asistencia'; body = vTurno(); break;
+    case 'asistencia': body = vAsistPage(); break;
     case 'guia': S.tab='guia'; body = vTurno(); break;
     case 'alumnos': body = vAlumnos(); break;
     case 'pagos': body = vPagos(); break;
@@ -996,23 +1047,91 @@ function vGuia(t, als){
     <div class="g-evalm" style="--mc:${m.color}"><b>Evaluación del módulo</b><p>${esc(m.evaluacion)}</p><p class="small muted" style="margin:6px 0 0">Cuando el alumno apruebe, ábrelo en <b>Módulos 1–6</b> y toca <b>Pasar al módulo ${Math.min(6,m.n+1)}</b>. Anota sus avances y puntos débiles en sus observaciones.</p></div>`;
 }
 
+/* ---------- Asistencia por turno y por fecha (dueño y educador) ---------- */
+/* Clases de un alumno: todas las fechas de su turno desde su día de inicio (+ recuperaciones registradas) */
+const quien = n => n==='Dirección' ? 'Director' : n;
+function clasesAlumno(a, adelante=14){
+  const H = hoy(), fin = addD(H, adelante), regs = {}; S.data.asistencia.filter(r=>r.alumnoId===a.id).forEach(r=>regs[r.fecha]=r);
+  const fechas = new Set(); let f = a.fechaInicio || H, guard = 0;
+  while(f<=fin && guard<500){ if(hayClase(a.turno,f)) fechas.add(f); f = addD(f,1); guard++; }
+  Object.keys(regs).forEach(x=>fechas.add(x));
+  const lista = [...fechas].sort().map((x,i)=>({ n:i+1, f:x, reg:regs[x]||null, fut:x>H, extra:!hayClase(a.turno,x) }));
+  return lista;
+}
+function alumnosEnFecha(turno, f){ return alumnosDe(turno).filter(a=>!a.fechaInicio || a.fechaInicio<=f); }
+function regsClase(turno, f){ return S.data.asistencia.filter(r=>r.turno===turno && r.fecha===f); }
+function pendientesTurno(turno, dias=30){
+  let n=0; for(let i=0;i<dias;i++){ const f=addD(hoy(),-i); if(hayClase(turno,f) && alumnosEnFecha(turno,f).length && !regsClase(turno,f).length) n++; } return n;
+}
+function vAsistPage(){
+  const mios = misTurnos();
+  if(!S.turno || !mios.includes(S.turno)) S.turno = mios.find(t=>hayClase(t)) || mios[0];
+  if(!S.turno) return `<div class="notice warn">Todavía no tienes un turno asignado. Pide a la dirección que te asigne uno.</div>`;
+  const t = TMAP[S.turno];
+  return `<div class="page-title"><div><p class="kicker">Por turno y por fecha</p><h1>Asistencia</h1>
+      <p>1) Elige el turno · 2) toca la fecha en el calendario · 3) marca a cada alumno y guarda. ${esDueno()?'Tú y el educador del turno pueden marcarla.':'La dirección también puede verla y corregirla.'}</p></div></div>
+    <div class="as-turnos" role="group" aria-label="Turno">${mios.map(id=>{ const x=TMAP[id], n=alumnosDe(id).length, p=pendientesTurno(id); return `
+      <button class="as-t" style="--tc:${x.color}" data-act="asTurno" data-t="${id}" aria-pressed="${id===S.turno}">
+        <span class="ic">${x.ic}</span><span style="min-width:0"><b>${esc(x.dias)}</b><span>${esc(x.franja)} · ${n} alumno${n===1?'':'s'}</span></span>
+        ${p?`<span class="badge b-warn pend" title="Clases sin asistencia en los últimos 30 días">${p}</span>`:''}
+      </button>`; }).join('')}</div>
+    ${vAsistencia(t, alumnosDe(t.id))}`;
+}
 function vAsistencia(t, als){
-  if(!S.attFecha || S.attTurno!==t.id){ S.attFecha = ultimaClase(t.id); S.attTurno = t.id; S.att = cargarAtt(t.id, S.attFecha); }
-  const f = S.attFecha, esDia = hayClase(t.id, f);
-  const yaTomada = S.data.asistencia.some(r=>r.turno===t.id && r.fecha===f);
+  if(!S.attFecha || S.attTurno!==t.id){ S.attFecha = ultimaClase(t.id); S.attTurno = t.id; S.attMes = S.attFecha.slice(0,7); S.att = cargarAtt(t.id, S.attFecha); }
+  if(!S.attMes) S.attMes = S.attFecha.slice(0,7);
+  if(!alumnosDe(t.id).length) return `<div class="notice">El turno ${esc(tNombre(t.id))} todavía no tiene alumnos. ${esDueno()?'Agrégalos desde <b>+ Nuevo alumno</b>.':'La dirección los agregará.'}</div>`;
+  return vCalendario(t) + vListaAsis(t);
+}
+function vCalendario(t){
+  const H = hoy(), mes = S.attMes, [y,m] = mes.split('-').map(Number);
+  const nDias = new Date(y, m, 0).getDate(), offset = (new Date(y, m-1, 1).getDay()+6)%7;
+  const nombreMes = cap(new Date(y, m-1, 1).toLocaleDateString('es-PE',{month:'long', year:'numeric'}));
+  let dadas=0, tomadas=0, pend=0, pres=0, base=0, cells='';
+  for(let i=0;i<offset;i++) cells += '<span></span>';
+  for(let d=1; d<=nDias; d++){
+    const f = `${y}-${pad(m)}-${pad(d)}`, clase = hayClase(t.id,f), fut = f>H, regs = regsClase(t.id,f), hay = alumnosEnFecha(t.id,f).length>0;
+    const p = regs.filter(r=>r.estado==='A'||r.estado==='T').length, b = regs.filter(r=>r.estado!=='J').length;
+    let cls = clase ? 'clase' : '', lab = '';
+    if(regs.length){ cls += clase?' ok':' extra'; lab = `${p}/${regs.length}`; tomadas++; pres+=p; base+=b; }
+    else if(clase && !fut && hay){ cls += ' pend'; lab = '!'; pend++; }
+    if(clase && !fut && hay) dadas++;
+    if(f===H) cls += ' hoy';
+    if(f===S.attFecha) cls += ' sel';
+    if(fut) cls += ' fut';
+    cells += `<button class="cal-d ${cls}" data-act="calDia" data-f="${f}" ${fut?'disabled':''} aria-label="${fLarga(f)}${regs.length?', asistencia guardada':clase&&!fut?', pendiente':''}">${d}${lab?`<small>${lab}</small>`:''}</button>`;
+  }
+  const prom = pct(pres, base);
+  return `<section class="cal" style="border-top:4px solid ${t.color}">
+    <div class="cal-h">
+      <button class="icon-btn" data-act="calMes" data-d="-1" aria-label="Mes anterior">‹</button>
+      <div style="text-align:center"><h3>${nombreMes}</h3><div class="small muted">${t.ic} ${esc(tNombre(t.id))} · clases: ${t.wd.map(w=>['dom','lun','mar','mié','jue','vie','sáb'][w]).join(' y ')}</div></div>
+      <button class="icon-btn" data-act="calMes" data-d="1" aria-label="Mes siguiente" ${mes>=H.slice(0,7)?'disabled':''}>›</button>
+    </div>
+    <div class="cal-g">${['L','M','M','J','V','S','D'].map(w=>`<span class="cal-w">${w}</span>`).join('')}${cells}</div>
+    <div class="cal-leg"><span><i style="background:rgba(92,201,138,.25)"></i>Tomada (presentes/total)</span><span><i style="background:rgba(240,180,60,.25)"></i>Pendiente</span><span><i style="background:var(--panel-2)"></i>Día de clase</span><span><i style="background:rgba(122,167,255,.2)"></i>Recuperación</span></div>
+    <div class="cal-sum">
+      <div><b>${tomadas}<span style="font-size:14px;color:var(--muted)">/${dadas}</span></b><span>Clases tomadas</span></div>
+      <div><b style="color:${pend?'var(--warn)':'var(--ok)'}">${pend}</b><span>Pendientes</span></div>
+      <div><b style="color:${prom==null?'inherit':prom>=85?'var(--ok)':prom>=70?'var(--warn)':'var(--bad)'}">${prom==null?'—':prom+'%'}</b><span>Asistencia del mes</span></div>
+    </div>
+  </section>`;
+}
+function vListaAsis(t){
+  const f = S.attFecha, esDia = hayClase(t.id, f), als = alumnosEnFecha(t.id, f), regs = regsClase(t.id, f);
+  const yaTomada = regs.length>0, ultimo = regs.slice().sort((a,b)=>String(b.ts).localeCompare(String(a.ts)))[0];
   const c = {A:0,T:0,F:0,J:0}; let sin = 0;
   als.forEach(a=>{ const e=S.att[a.id]; if(e) c[e]++; else sin++; });
-  if(!als.length) return `<div class="notice">Este turno todavía no tiene alumnos. ${esDueno()?'Agrégalos desde <b>+ Nuevo alumno</b>.':'La dirección los agregará.'}</div>`;
-  return `
-    <div class="att-head">
-      <input type="date" class="date-in" id="attFecha" value="${f}" max="${hoy()}" aria-label="Fecha de la clase">
-      <div class="chips">
-        <button class="chip" data-act="attDia" data-f="${hoy()}" aria-pressed="${f===hoy()}">Hoy</button>
-        <button class="chip" data-act="attDia" data-f="${ultimaClase(t.id)}" aria-pressed="${f===ultimaClase(t.id)}">Última clase</button>
-      </div>
+  return `<section class="as-day" id="asDay">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">
+      <div><p class="kicker" style="color:${t.color}">${t.ic} ${esc(tNombre(t.id))}</p>
+        <h2 style="font-size:22px">${cap(fLarga(f))}</h2>
+        <div style="margin-top:6px">${yaTomada?`<span class="badge b-ok">✓ Guardada</span>${ultimo&&ultimo.por?` <span class="small muted">por ${esc(quien(ultimo.por))}</span>`:''}`:'<span class="badge b-warn">Pendiente de marcar</span>'}</div></div>
+      <details class="small" style="color:var(--muted)"><summary style="cursor:pointer;color:var(--gold-soft)">Otra fecha ›</summary>
+        <input type="date" class="date-in" id="attFecha" value="${f}" max="${hoy()}" aria-label="Elegir otra fecha" style="margin-top:6px"></details>
     </div>
-    <p style="margin:10px 0 0;font-family:var(--display);text-transform:uppercase;font-size:18px">${cap(fLarga(f))} ${yaTomada?'<span class="badge b-ok" style="vertical-align:3px">Guardada</span>':'<span class="badge b-warn" style="vertical-align:3px">Pendiente</span>'}</p>
-    ${!esDia?`<div class="notice warn" style="margin-top:10px">Ojo: este turno normalmente no tiene clase los ${fDia(f)}. Si fue una clase de recuperación, puedes marcarla igual.</div>`:''}
+    ${!esDia?`<div class="notice warn" style="margin-top:10px">Este turno normalmente no tiene clase los ${fDia(f)}. Si fue una clase de recuperación, puedes marcarla igual.</div>`:''}
+    ${!als.length?`<div class="notice" style="margin-top:10px">Ningún alumno de este turno había empezado todavía en esta fecha.</div>`:`
     <div class="att-sum">
       <div><b style="color:var(--ok)">${c.A}</b><span>Asistió</span></div>
       <div><b style="color:var(--warn)">${c.T}</b><span>Tarde</span></div>
@@ -1028,8 +1147,9 @@ function vAsistencia(t, als){
       </div>`;}).join('')}</div>
     <div class="sticky-save">
       <button class="btn btn-ghost btn-sm" data-act="todosPresentes" style="flex:1">✓ Todos asistieron</button>
-      <button class="btn btn-gold" data-act="guardarAsis" style="flex:1.3">${sin?`Guardar (faltan ${sin})`:'Guardar asistencia'}</button>
-    </div>`;
+      <button class="btn btn-gold" data-act="guardarAsis" style="flex:1.3">${sin?`Guardar (faltan ${sin})`:yaTomada?'Guardar cambios':'Guardar asistencia'}</button>
+    </div>`}
+  </section>`;
 }
 function cargarAtt(turno, fecha){
   const o = {}; S.data.asistencia.filter(r=>r.turno===turno && r.fecha===fecha).forEach(r=>o[r.alumnoId]=r.estado); return o;
@@ -1197,7 +1317,17 @@ function hojaPerfil(id){
           <div><b style="color:var(--ok)">${s.A}</b><span>Asistió</span></div><div><b style="color:var(--warn)">${s.T}</b><span>Tarde</span></div>
           <div><b style="color:var(--bad)">${s.F}</b><span>Faltó</span></div><div><b style="color:var(--info)">${s.J}</b><span>Justificó</span></div></div></div>
       ${s.seguidas>=2?`<div class="notice warn" style="margin-top:10px">🚨 Faltó ${s.seguidas} clases seguidas. Escríbele para saber qué pasó.</div>`:''}
-      ${s.ultimos.length?`<div class="small muted" style="margin-top:10px">Últimas clases:</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${s.ultimos.map(r=>`<span class="cell ${r.estado}" title="${fCorta(r.fecha)}: ${EST[r.estado].t}">${EST[r.estado].ic}</span>`).join('')}</div>`:'<p class="small dim" style="margin:10px 0 0">Aún no tiene asistencias registradas.</p>'}
+    ${(()=>{ const cl = clasesAlumno(a), pasadas = cl.filter(k=>!k.fut), futuras = cl.filter(k=>k.fut).slice(0,2), sinMarcar = pasadas.filter(k=>!k.reg).length;
+      const todas = S.verClases===a.id, mostrar = todas ? pasadas.slice().reverse() : pasadas.slice().reverse().slice(0,6);
+      const fila = k => { const e = k.reg?.estado; return `<div class="cl-row ${k.fut?'fut':e||'sin'}">
+          <span class="cl-n">${k.n}<small>clase</small></span>
+          <span class="cl-tx"><b>${cap(fDia(k.f))} ${fCorta(k.f)}</b><span>${k.fut?(k.f===futuras[0]?.f?'Próxima clase':'Después'):e?EST[e].t+(k.reg.por?' · '+esc(quien(k.reg.por)):''):'Sin marcar'}${k.extra?' · recuperación':''}</span></span>
+          <span class="cl-btns" role="group" aria-label="Asistencia del ${fCorta(k.f)}">${['A','T','F','J'].map(x=>`<button data-act="marcarUno" data-id="${a.id}" data-f="${k.f}" data-e="${x}" aria-pressed="${e===x}" aria-label="${EST[x].t}" title="${EST[x].t}" ${k.fut?'disabled':''}>${EST[x].ic}</button>`).join('')}</span>
+        </div>`; };
+      return `<p class="crono-t" style="margin-top:14px">📅 Sus clases desde que empezó (${fCorta(a.fechaInicio)})</p>
+        ${sinMarcar?`<div class="notice warn" style="margin:6px 0">${sinMarcar} clase${sinMarcar>1?'s':''} sin marcar. Toca ✓ asistió, ⏱ tarde, ✕ faltó o J justificó.</div>`:''}
+        <div class="cl-list">${futuras.slice().reverse().map(fila).join('')}${mostrar.map(fila).join('') || '<p class="small dim" style="margin:6px 0">Todavía no le toca ninguna clase.</p>'}</div>
+        ${pasadas.length>6?`<button class="btn btn-ghost btn-sm btn-block" style="margin-top:8px" data-act="verClases" data-id="${a.id}">${todas?'Ver menos':`Ver todas sus clases (${pasadas.length})`}</button>`:''}`; })()}
     </div>
 
     ${p?(()=>{ const cr = cronograma(a), mens = precioMens(a), mat = precioMat(a);
@@ -1357,7 +1487,7 @@ app.addEventListener('input', e=>{
   if(e.target.id==='buscar'){ S.buscar=e.target.value; const pos=e.target.selectionStart; render(); const b=$('#buscar'); b.focus(); b.setSelectionRange(pos,pos); }
 });
 app.addEventListener('change', e=>{
-  if(e.target.id==='attFecha' && e.target.value){ S.attFecha = e.target.value > hoy() ? hoy() : e.target.value; S.att = cargarAtt(S.turno, S.attFecha); render(); }
+  if(e.target.id==='attFecha' && e.target.value){ S.attFecha = e.target.value > hoy() ? hoy() : e.target.value; S.attMes = S.attFecha.slice(0,7); S.att = cargarAtt(S.turno, S.attFecha); render(); }
 });
 
 sheet.addEventListener('submit', async e=>{
@@ -1410,15 +1540,26 @@ document.addEventListener('click', async e=>{
   switch(act){
     case 'ir': S.vista = b.dataset.v; if(S.vista==='turno'){ S.tab='modulos'; } window.scrollTo(0,0); render(); break;
     case 'salir': if(confirmar('¿Cerrar sesión en este celular?')){ S.data=null; S.pin=''; lsSet('cfm_pin',''); render(); } break;
-    case 'abrirTurno': S.turno=b.dataset.t; S.guiaMod=null; S.vista='turno'; S.tab=b.dataset.tab||'modulos'; S.attFecha=null; window.scrollTo(0,0); render(); break;
+    case 'abrirTurno': S.turno=b.dataset.t; S.guiaMod=null; S.tab=b.dataset.tab||'modulos'; S.vista = S.tab==='asistencia' ? 'asistencia' : 'turno'; S.attFecha=null; S.attMes=null; window.scrollTo(0,0); render(); break;
     case 'cambiarTurno': S.turno=b.dataset.t; S.guiaMod=null; S.attFecha=null; render(); break;
     case 'tab': S.tab=b.dataset.tab; if(!esDueno()) S.vista = S.tab==='asistencia'?'asistencia':S.tab==='guia'?'guia':'turno'; render(); break;
     case 'guiaMod': S.guiaMod=Number(b.dataset.m); render(); break;
     case 'attDia': S.attFecha=b.dataset.f; S.att=cargarAtt(S.turno,S.attFecha); render(); break;
+    case 'verClases': S.verClases = S.verClases===id ? null : id; hojaPerfil(id); break;
+    case 'marcarUno': {
+      const a = S.data.alumnos.find(x=>x.id===id); if(!a) break;
+      const ya = S.data.asistencia.find(r=>r.alumnoId===id && r.fecha===b.dataset.f);
+      if(ya && ya.estado===b.dataset.e) break;
+      const sc = sheet.querySelector('.sheet')?.scrollTop||0;
+      if(await ejecutar('guardarAsistencia', { turno:a.turno, fecha:b.dataset.f, registros:[{alumnoId:id, estado:b.dataset.e}] }, `${fCorta(b.dataset.f)}: ${EST[b.dataset.e].t}`)){ hojaPerfil(id); const sh=sheet.querySelector('.sheet'); if(sh) sh.scrollTop=sc; if(S.attTurno===a.turno) S.att=cargarAtt(S.turno,S.attFecha); render(); }
+      break; }
+    case 'asTurno': S.turno=b.dataset.t; S.attFecha=null; S.attMes=null; render(); break;
+    case 'calMes': { const [yy,mm]=S.attMes.split('-').map(Number); const dd=new Date(yy, mm-1+Number(b.dataset.d), 1); S.attMes=dd.getFullYear()+'-'+pad(dd.getMonth()+1); render(); break; }
+    case 'calDia': S.attFecha=b.dataset.f; S.attMes=S.attFecha.slice(0,7); S.att=cargarAtt(S.turno,S.attFecha); render(); setTimeout(()=>$('#asDay')?.scrollIntoView({behavior:'smooth',block:'start'}),30); break;
     case 'marcar': S.att[id] = S.att[id]===b.dataset.e ? undefined : b.dataset.e; if(!S.att[id]) delete S.att[id]; render(); break;
-    case 'todosPresentes': alumnosDe(S.turno).forEach(a=>{ if(!S.att[a.id]) S.att[a.id]='A'; }); render(); toast('Marcados como asistió. Corrige a los que faltaron.'); break;
+    case 'todosPresentes': alumnosEnFecha(S.turno, S.attFecha).forEach(a=>{ if(!S.att[a.id]) S.att[a.id]='A'; }); render(); toast('Marcados como asistió. Corrige a los que faltaron.'); break;
     case 'guardarAsis': {
-      const als = alumnosDe(S.turno); const regs = als.filter(a=>S.att[a.id]).map(a=>({alumnoId:a.id, estado:S.att[a.id]}));
+      const als = alumnosEnFecha(S.turno, S.attFecha); const regs = als.filter(a=>S.att[a.id]).map(a=>({alumnoId:a.id, estado:S.att[a.id]}));
       if(!regs.length){ toast('Marca al menos a un alumno', true); break; }
       const sin = als.length - regs.length;
       if(sin && !confirmar(`Faltan ${sin} alumno${sin>1?'s':''} por marcar. ¿Guardar igual?`)) break;
