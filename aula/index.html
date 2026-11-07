@@ -42,6 +42,12 @@ header{border-bottom:1px solid var(--line);background:linear-gradient(180deg,#1a
 .hello h1 span{color:var(--gold)}
 .hello p{color:var(--muted);margin:8px 0 0}
 .namebox{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.cuenta{display:flex;align-items:center;gap:12px;margin:18px 0 0;padding:14px 16px;border-radius:18px;text-decoration:none;color:var(--text);background:linear-gradient(135deg,rgba(227,167,47,.22),rgba(227,167,47,.06));border:1px solid var(--gold)}
+.cuenta-ic{font-size:24px;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(0,0,0,.3);flex:0 0 auto}
+.cuenta-tx{flex:1;min-width:0}
+.cuenta-tx b{display:block;font-family:var(--display);text-transform:uppercase;letter-spacing:.03em;font-size:17px;color:var(--gold-soft)}
+.cuenta-tx span{display:block;font-size:14px;color:var(--muted)}
+.cuenta-go{font-size:28px;color:var(--gold)}
 .namebox[hidden],[hidden]{display:none!important}
 .namebox input{flex:1 1 200px;min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text);padding:0 14px;font:inherit}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:999px;border:0;cursor:pointer;font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;font-size:16px;font-weight:600;text-decoration:none}
@@ -123,6 +129,11 @@ footer a{color:var(--muted)}
 </header>
 
 <main class="wrap">
+  <a class="cuenta" href="../sistema/">
+    <span class="cuenta-ic">🔑</span>
+    <span class="cuenta-tx"><b>Mi cuenta: pagos y asistencias</b><span>Entra con tu PIN y mira tu cronograma de pagos, tus próximas cuotas y tus clases.</span></span>
+    <span class="cuenta-go">›</span>
+  </a>
   <section class="overall" aria-live="polite">
     <div class="row"><span>Tu avance del curso</span><b id="pct">0%</b></div>
     <div class="bar"><i id="pctbar"></i></div>
