@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Turnos que se abren · Escuela de Barbería Callao For Men</title>
+<meta name="description" content="Elige tu turno en la Escuela de Barbería Callao For Men (Piura): sábados y domingos desde el 21 de noviembre, Domingo Full Day desde el 22 de noviembre y lunes y miércoles desde el 7 de diciembre.">
+<meta property="og:title" content="📅 Turnos que se abren · Escuela Callao For Men">
+<meta property="og:description" content="Sáb y Dom desde el 21 nov · Domingo Full Day desde el 22 nov · Lun y Mié (verano) desde el 7 dic. Separa tu vacante por WhatsApp.">
+<meta property="og:image" content="https://callaoformen.github.io/escuela/img/og.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0b0a08">
+<link rel="icon" href="../img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b0a08;--panel:#17140e;--panel-2:#211c13;--line:#3a3020;
+  --gold:#e3a72f;--gold-soft:#f3cf7a;--text:#f6f1e8;--muted:#bdb29f;--wa:#25d366;
+  --display:"Oswald","Arial Narrow",Impact,sans-serif;--body:"Barlow","Helvetica Neue",Arial,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:radial-gradient(120% 60% at 50% 0%,#2a1f0c 0%,var(--ink) 55%);background-color:var(--ink);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.5;padding-bottom:150px;min-height:100vh}
+a{color:var(--gold-soft)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold-soft);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);text-transform:uppercase;line-height:1.08;margin:0;letter-spacing:.01em}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px}
+
+/* Portada */
+.top{text-align:center;padding:26px 0 8px}
+.top img{width:120px;height:auto;object-fit:contain;display:block;margin:0 auto 10px;filter:drop-shadow(0 8px 20px rgba(0,0,0,.5))}
+.kicker{font-family:var(--display);text-transform:uppercase;letter-spacing:.16em;font-size:12px;color:var(--gold);margin:0 0 8px}
+.top h1{font-size:clamp(34px,9vw,52px)}
+.top h1 span{color:var(--gold)}
+.top p{color:var(--muted);margin:10px auto 0;max-width:34ch}
+.precio{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:16px 0 0}
+.pill{display:inline-flex;align-items:center;gap:6px;background:rgba(227,167,47,.12);border:1px solid rgba(227,167,47,.4);color:var(--gold-soft);border-radius:999px;padding:6px 12px;font-size:14px;font-weight:600}
+.pill s{opacity:.6}
+
+/* Pasos */
+.paso{margin-top:28px}
+.paso-h{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.paso-n{width:34px;height:34px;border-radius:11px;background:var(--gold);color:#1a1205;display:grid;place-items:center;font-family:var(--display);font-size:18px;font-weight:700;flex:0 0 auto}
+.paso-h h2{font-size:21px}
+.exp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.exp button{background:var(--panel);border:2px solid var(--line);border-radius:18px;padding:16px 12px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;transition:border-color .2s,background .2s,transform .15s}
+.exp button:active{transform:scale(.98)}
+.exp button i{font-style:normal;font-size:30px;line-height:1}
+.exp button b{font-family:var(--display);text-transform:uppercase;font-size:16px;letter-spacing:.03em;line-height:1.15}
+.exp button span{font-size:13px;color:var(--muted)}
+.exp button[aria-pressed="true"]{border-color:var(--gold);background:rgba(227,167,47,.14)}
+.exp button[aria-pressed="true"] b{color:var(--gold-soft)}
+.aviso{margin-top:12px;padding:12px 14px;border-radius:14px;font-size:15px;background:rgba(122,167,255,.1);border:1px solid rgba(122,167,255,.3);color:#cfdcff;display:none}
+.aviso.on{display:block}
+
+/* Tarjetas de turno */
+.tgrid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+.tcard{position:relative;display:flex;flex-direction:column;gap:14px;background:linear-gradient(160deg,rgba(227,167,47,.14),rgba(23,20,14,.96) 55%);border:1px solid var(--gold);border-radius:22px;padding:18px;scroll-margin-top:20px;transition:box-shadow .3s,transform .3s,opacity .3s}
+.tcard.flash{box-shadow:0 0 0 4px var(--gold),0 0 40px rgba(227,167,47,.45);transform:scale(1.015)}
+.tcard[hidden]{display:none}
+.tc-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tc-grupo{font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--gold)}
+.tc-falta{font-size:13px;font-weight:700;color:#1a1205;background:var(--gold);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.tc-falta.hoy{background:var(--wa);color:#06230f}
+.tc-falta.curso{background:#2a2418;color:var(--muted)}
+.tc-fecha{display:flex;gap:14px;align-items:center}
+.tc-cal{flex:0 0 auto;width:66px;border-radius:14px;overflow:hidden;text-align:center;background:#f6f1e8;color:#111;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.tc-cal small{display:block;background:#c62828;color:#fff;font-family:var(--display);font-size:12px;letter-spacing:.1em;padding:3px 0}
+.tc-cal b{display:block;font-family:var(--display);font-size:30px;line-height:1.25}
+.tc-cal em{display:block;font-style:normal;font-size:11px;font-weight:700;color:#555;padding-bottom:4px;text-transform:uppercase}
+.tc-ini{display:block;font-size:13px;color:var(--gold-soft);font-weight:600}
+.tcard h3{margin:2px 0 2px;font-size:22px}
+.tc-hora{display:block;font-size:15px;color:var(--text)}
+.tc-ideal{display:flex;gap:8px;align-items:flex-start;font-size:14px;color:var(--muted);background:rgba(0,0,0,.25);border-radius:12px;padding:10px 12px}
+.tc-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px;background:rgba(255,255,255,.07);color:var(--muted)}
+.tag.ok{background:rgba(92,201,138,.15);color:#8be0ae}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 20px;border-radius:999px;border:0;font-family:var(--display);font-size:17px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;font-weight:600;white-space:nowrap}
+.btn svg{width:22px;height:22px;flex:0 0 auto}
+.btn-wa{background:var(--wa);color:#06230f}
+.btn-line{border:2px solid var(--gold);color:var(--gold-soft);background:transparent}
+.tc-btn{width:100%;margin-top:auto}
+
+/* Cómo separo */
+.como{display:grid;gap:10px}
+.como div{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+.como i{font-style:normal;font-size:24px;line-height:1}
+.como b{display:block}
+.como span{font-size:15px;color:var(--muted)}
+.mas{display:grid;gap:10px;margin-top:14px}
+.mas a{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+.mas a b{display:block;font-family:var(--display);text-transform:uppercase;letter-spacing:.03em;color:var(--gold-soft)}
+.mas a span{font-size:14px;color:var(--muted)}
+.mas a .go{margin-left:auto;font-size:26px;color:var(--gold)}
+footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
+
+/* Botones flotantes "Quiero este turno" */
+.flot{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px 0 calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(11,10,8,.98) 70%,rgba(11,10,8,0))}
+.flot-t{max-width:860px;margin:0 auto;padding:0 18px 6px;display:flex;align-items:center;gap:8px;font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--gold-soft)}
+.flot-t i{width:8px;height:8px;border-radius:50%;background:var(--wa);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.7)}70%{box-shadow:0 0 0 8px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+.flot-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 18px 2px;max-width:860px;margin:0 auto;scroll-snap-type:x mandatory}
+.flot-row::-webkit-scrollbar{display:none}
+.fbtn{flex:0 0 auto;scroll-snap-align:start;display:flex;align-items:center;gap:10px;background:var(--wa);color:#06230f;text-decoration:none;border-radius:16px;padding:9px 14px 9px 12px;box-shadow:0 8px 22px rgba(0,0,0,.45);animation:fin .4s ease both}
+.fbtn:nth-child(2){animation-delay:.08s}.fbtn:nth-child(3){animation-delay:.16s}.fbtn:nth-child(4){animation-delay:.24s}
+.fbtn svg{width:22px;height:22px;flex:0 0 auto}
+.fbtn b{display:block;font-family:var(--display);text-transform:uppercase;font-size:15px;line-height:1.1;letter-spacing:.02em}
+.fbtn small{display:block;font-size:12px;font-weight:700;opacity:.8}
+.fbtn[hidden]{display:none}
+@keyframes fin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.fbtn,.flot-t i{animation:none}.tcard{transition:none}}
+@media (min-width:700px){.flot-row{justify-content:center}}
+</style>
+</head>
+<body>
+
+<header class="top wrap">
+  <img src="../img/escudo.png" alt="Escuela de Barbería Callao For Men" width="120" height="106">
+  <p class="kicker">Escuela de barbería · Castilla, Piura</p>
+  <h1>Turnos que <span>se abren</span></h1>
+  <p>Elige tu turno y separa tu vacante por WhatsApp en 1 minuto.</p>
+  <div class="precio"><span class="pill">Matrícula S/ 59 <s>S/ 100</s></span><span class="pill">Mensualidad S/ 197</span><span class="pill">6 meses · certificado</span></div>
+</header>
+
+<main class="wrap">
+  <section class="paso" aria-labelledby="p1">
+    <div class="paso-h"><span class="paso-n">1</span><h2 id="p1">¿Ya sabes cortar?</h2></div>
+    <div class="exp" role="group" aria-label="Tu experiencia">
+      <button type="button" data-exp="cero" aria-pressed="false"><i>✂️</i><b>Empiezo desde cero</b><span>Nunca he cortado o recién empiezo</span></button>
+      <button type="button" data-exp="exp" aria-pressed="false"><i>💈</i><b>Ya tengo experiencia</b><span>Ya corto y quiero perfeccionarme</span></button>
+    </div>
+    <div class="aviso" id="aviso" role="status"></div>
+  </section>
+
+  <section class="paso" aria-labelledby="p2">
+    <div class="paso-h"><span class="paso-n">2</span><h2 id="p2">Elige tu turno</h2></div>
+    <div class="tgrid" id="tgrid"></div>
+  </section>
+
+  <section class="paso" aria-labelledby="p3">
+    <div class="paso-h"><span class="paso-n">3</span><h2 id="p3">Así separas tu vacante</h2></div>
+    <div class="como">
+      <div><i>📲</i><p style="margin:0"><b>Toca "Quiero este turno"</b><span>Se abre WhatsApp con tu mensaje ya escrito. Solo dale enviar.</span></p></div>
+      <div><i>💬</i><p style="margin:0"><b>Te respondemos</b><span>Te confirmamos tu vacante, la fecha de inicio y resolvemos tus dudas.</span></p></div>
+      <div><i>✅</i><p style="margin:0"><b>Pagas tu matrícula de S/ 59</b><span>Y listo: tu cupo queda separado para el día de inicio.</span></p></div>
+    </div>
+    <div class="mas">
+      <a href="../recorrido/"><span style="font-size:26px">📱</span><span><b>Mira tu plataforma de alumno</b><span>Tus clases, tus pagos y tu asistencia desde el celular.</span></span><span class="go">›</span></a>
+      <a href="../#temario"><span style="font-size:26px">📚</span><span><b>Qué vas a aprender</b><span>Los 6 módulos del curso, clase por clase.</span></span><span class="go">›</span></a>
+    </div>
+  </section>
+
+  <footer>Escuela de Barbería Callao For Men · Castilla, Piura · WhatsApp 936 967 506</footer>
+</main>
+
+<nav class="flot" aria-label="Quiero este turno">
+  <div class="flot-t"><i aria-hidden="true"></i>Quiero este turno 👇</div>
+  <div class="flot-row" id="flot"></div>
+</nav>
+
+<script>
+/* ======= TURNOS (para cambiar fechas o agregar turnos, edita esta lista) =======
+   exp: true = también lo pueden elegir quienes ya tienen experiencia */
+var TURNOS = [
+  { id:'sd',  inicio:'2026-11-21', grupo:'Fin de semana', ic:'☀️', nombre:'Sábados y domingos', dias:'Sábado y domingo', hora:'10:00 a. m. – 1:00 p. m.', corto:'Sáb y Dom', exp:true,
+    ideal:'Ideal si trabajas o estudias de lunes a viernes.', tag:'TURNO SÁBADOS Y DOMINGOS - INICIA 21 NOV', texto:'el turno sábados y domingos de 10 a. m. a 1 p. m. que inicia el sábado 21 de noviembre' },
+  { id:'dfd', inicio:'2026-11-22', grupo:'Fin de semana', ic:'⭐', nombre:'Domingo Full Day', dias:'Solo domingos', hora:'Un solo día a la semana', corto:'Domingos', exp:true,
+    ideal:'Ideal si solo tienes un día libre a la semana.', tag:'TURNO DOMINGO FULL DAY - INICIA 22 NOV', texto:'el turno Domingo Full Day que inicia el domingo 22 de noviembre' },
+  { id:'lmm', inicio:'2026-12-07', grupo:'Interdiario · Verano', ic:'🌞', nombre:'Lunes y miércoles', dias:'Mañana', hora:'10:00 a. m. – 1:00 p. m.', corto:'Lun y Mié mañana', exp:false,
+    ideal:'Ideal para estas vacaciones si tienes las mañanas libres.', tag:'TURNO LUNES Y MIÉRCOLES MAÑANA - INICIA 7 DIC', texto:'el turno de verano lunes y miércoles de 10 a. m. a 1 p. m. que inicia el lunes 7 de diciembre' },
+  { id:'lmt', inicio:'2026-12-07', grupo:'Interdiario · Verano', ic:'🌇', nombre:'Lunes y miércoles', dias:'Tarde', hora:'3:00 – 6:00 p. m.', corto:'Lun y Mié tarde', exp:false,
+    ideal:'Ideal para estas vacaciones si tienes las tardes libres.', tag:'TURNO LUNES Y MIÉRCOLES TARDE - INICIA 7 DIC', texto:'el turno de verano lunes y miércoles de 3 p. m. a 6 p. m. que inicia el lunes 7 de diciembre' }
+];
+var WA = '51936967506';
+var MESES = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SET','OCT','NOV','DIC'];
+var MESES_L = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','setiembre','octubre','noviembre','diciembre'];
+var DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+var WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.1.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>';
+
+var exp = null; /* null = sin elegir · 'cero' · 'exp' */
+try { exp = sessionStorage.getItem('cfm_turnos_exp'); } catch(e) {}
+
+function pISO(s){ var q=s.split('-'); return new Date(+q[0], q[1]-1, +q[2]); }
+function hoyISO(){ var d=new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+function dias(a,b){ return Math.round((pISO(b)-pISO(a))/864e5); }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function link(t){
+  var nivel = exp==='exp' ? ' Ya tengo experiencia cortando.' : exp==='cero' ? ' Empiezo desde cero.' : '';
+  var msg = '['+t.tag+'] Hola, vi los turnos y deseo separar mi vacante en '+t.texto+'.'+nivel;
+  return 'https://wa.me/'+WA+'?text='+encodeURIComponent(msg);
+}
+function visible(t){ return exp!=='exp' || t.exp; }
+
+function pintar(){
+  var H = hoyISO();
+  document.querySelectorAll('.exp button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.exp===exp)); });
+  var av = document.getElementById('aviso');
+  if(exp==='exp'){ av.className='aviso on'; av.innerHTML='💈 <b>Con experiencia</b> entras a los turnos de fin de semana: <b>sábados y domingos de 10 a. m. a 1 p. m.</b> o <b>Domingo Full Day</b>.'; }
+  else if(exp==='cero'){ av.className='aviso on'; av.innerHTML='✂️ <b>Desde cero</b> puedes elegir cualquier turno. Aprendes desde lo básico, con práctica desde la primera semana.'; }
+  else { av.className='aviso'; av.innerHTML=''; }
+
+  document.getElementById('tgrid').innerHTML = TURNOS.map(function(t){
+    var n = dias(H, t.inicio), d = pISO(t.inicio), falta, cls='';
+    if(n>1) falta='Faltan '+n+' días'; else if(n===1){ falta='¡Empieza mañana!'; cls='hoy'; } else if(n===0){ falta='¡Empieza hoy!'; cls='hoy'; } else { falta='Grupo en curso'; cls='curso'; }
+    var curso = n<0;
+    return '<article class="tcard" id="t-'+t.id+'" '+(visible(t)?'':'hidden')+'>'+
+      '<div class="tc-top"><span class="tc-grupo">'+esc(t.grupo)+'</span><span class="tc-falta '+cls+'">'+falta+'</span></div>'+
+      '<div class="tc-fecha"><span class="tc-cal" aria-hidden="true"><small>'+MESES[d.getMonth()]+'</small><b>'+d.getDate()+'</b><em>'+DIAS[d.getDay()].slice(0,3)+'</em></span>'+
+        '<span><span class="tc-ini">'+(curso?'Empezó el ':'Inicia el ')+DIAS[d.getDay()]+' '+d.getDate()+' de '+MESES_L[d.getMonth()]+'</span>'+
+        '<h3>'+t.ic+' '+esc(t.nombre)+'</h3><span class="tc-hora">'+esc(t.dias)+' · '+esc(t.hora)+'</span></span></div>'+
+      '<div class="tc-ideal"><span>👉</span><span>'+esc(t.ideal)+'</span></div>'+
+      '<div class="tc-tags"><span class="tag ok">Desde cero</span>'+(t.exp?'<span class="tag ok">Con experiencia</span>':'')+'<span class="tag">Certificado</span></div>'+
+      '<a class="btn btn-wa tc-btn" href="'+link(t)+'" target="_blank" rel="noopener">'+WA_ICON+(curso?'Pregunta por el próximo grupo':'Quiero este turno')+'</a>'+
+    '</article>';
+  }).join('');
+
+  document.getElementById('flot').innerHTML = TURNOS.filter(function(t){ return visible(t) && dias(H,t.inicio)>=0; }).map(function(t){
+    var d = pISO(t.inicio);
+    return '<a class="fbtn" href="'+link(t)+'" target="_blank" rel="noopener" data-id="'+t.id+'">'+WA_ICON+'<span><b>'+esc(t.corto)+'</b><small>Inicia '+DIAS[d.getDay()].slice(0,3)+' '+d.getDate()+' '+MESES[d.getMonth()].toLowerCase()+'</small></span></a>';
+  }).join('');
+  var fl = document.querySelector('.flot'); fl.hidden = !document.getElementById('flot').children.length;
+}
+
+document.querySelector('.exp').addEventListener('click', function(e){
+  var b = e.target.closest('button[data-exp]'); if(!b) return;
+  exp = b.dataset.exp;
+  try { sessionStorage.setItem('cfm_turnos_exp', exp); } catch(err) {}
+  pintar();
+  document.getElementById('p2').scrollIntoView({ behavior:'smooth', block:'start' });
+});
+pintar();
+</script>
+</body>
+</html>
