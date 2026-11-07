@@ -247,7 +247,6 @@ section{padding:64px 0}
 .step .goal{margin:12px 0 0;padding-top:12px;border-top:1px dashed var(--line);color:var(--gold-soft);font-size:15px}
 .step.final{border-color:var(--gold);background:linear-gradient(135deg,rgba(227,167,47,.16),var(--panel) 55%)}
 
-.turno{margin-top:14px;min-height:46px;font-size:15px;width:100%}
 
 /* Especializaciones */
 .spec-sec{background:radial-gradient(ellipse 70% 50% at 100% 0%,rgba(227,167,47,.12),transparent 70%)}
@@ -305,6 +304,44 @@ details p{margin:0 0 18px;color:var(--muted)}
 .slogan b{color:var(--gold)}
 
 footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-size:14px;text-align:center}
+
+
+/* Turnos que inician pronto */
+.tgrid{display:grid;gap:14px;margin-top:26px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.tcard{position:relative;display:flex;flex-direction:column;gap:14px;background:linear-gradient(160deg,rgba(227,167,47,.13),rgba(22,19,14,.95) 55%);border:1px solid var(--gold);border-radius:20px;padding:18px;scroll-margin-top:90px;transition:box-shadow .3s,transform .3s}
+.tcard.tcard-pronto{background:var(--panel);border-color:var(--line)}
+.tcard.flash{box-shadow:0 0 0 4px var(--gold),0 0 40px rgba(227,167,47,.45);transform:scale(1.015)}
+.tc-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tc-grupo{font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--gold)}
+.tc-falta{font-size:13px;font-weight:700;color:#1a1205;background:var(--gold);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.tcard-pronto .tc-falta{background:#2a2418;color:var(--muted)}
+.tc-falta.hoy{background:#25d366;color:#06230f}
+.tc-falta.curso{background:#2a2418;color:var(--muted)}
+.tc-fecha{display:flex;gap:14px;align-items:center}
+.tc-cal{flex:0 0 auto;width:62px;border-radius:14px;overflow:hidden;text-align:center;background:#f6f1e8;color:#111;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.tc-cal small{display:block;background:#c62828;color:#fff;font-family:var(--display);font-size:12px;letter-spacing:.1em;padding:3px 0}
+.tc-cal b{display:block;font-family:var(--display);font-size:28px;line-height:1.25}
+.tcard-pronto .tc-cal small{background:#555}
+.tc-ini{display:block;font-size:13px;color:var(--gold-soft);font-weight:600}
+.tcard h3{margin:2px 0 2px;font-size:21px}
+.tc-hora{display:block;font-size:15px;color:var(--muted)}
+.tc-btn{width:100%;min-height:52px;font-size:16px;margin-top:auto;white-space:nowrap;padding:0 16px}
+.flotantes{position:fixed;right:10px;bottom:90px;z-index:6;width:min(190px,calc(100vw - 20px));display:flex;flex-direction:column;align-items:stretch;gap:6px;transition:opacity .25s,transform .25s}
+.flotantes.oculto{opacity:0;transform:translateY(12px);pointer-events:none}
+.fl-head{display:flex;align-items:center;gap:7px;background:#1b160e;border:1px solid var(--gold);border-radius:999px;padding:7px 10px;color:var(--text);font:inherit;font-size:12px;line-height:1.1;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.fl-head b{flex:1;text-align:left;font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.fl-dot{width:9px;height:9px;border-radius:50%;background:#25d366;box-shadow:0 0 0 0 rgba(37,211,102,.7);animation:flpulse 1.6s infinite}
+.fl-tog{font-weight:700;color:var(--gold);width:16px;text-align:center}
+@keyframes flpulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.7)}70%{box-shadow:0 0 0 8px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+.fl-lista{display:flex;flex-direction:column;gap:5px}
+.flotantes.cerrado .fl-lista{display:none}
+.fl-chip{display:flex;align-items:center;gap:8px;background:linear-gradient(90deg,#e3a72f,#f3cf7a);color:#1a1205;text-decoration:none;border-radius:14px;padding:6px 10px;box-shadow:0 8px 22px rgba(0,0,0,.45);animation:flin .4s ease both}
+.fl-chip:nth-child(2){animation-delay:.08s}.fl-chip:nth-child(3){animation-delay:.16s}.fl-chip:nth-child(4){animation-delay:.24s}
+.fl-chip .fl-ic{font-size:16px}
+.fl-chip b{display:block;font-family:var(--display);text-transform:uppercase;font-size:13px;line-height:1.1;letter-spacing:.02em}
+.fl-chip small{display:block;font-size:11px;font-weight:700;opacity:.85}
+@keyframes flin{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.fl-chip,.fl-dot{animation:none}}
 
 /* Botón fijo de WhatsApp */
 .sticky{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--ink) 65%,rgba(11,10,8,0));display:flex;justify-content:center;z-index:5}
@@ -483,17 +520,43 @@ footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-s
   </div>
 </section>
 
-<section aria-labelledby="horarios-t">
+<section id="turnos" aria-labelledby="horarios-t">
   <div class="wrap">
-    <p class="kicker">Horarios</p>
-    <h2 id="horarios-t">Elige el turno <span class="g">que te acomoda</span></h2>
-    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
-      <div class="card reveal"><h3 style="margin-top:0">Sábados y domingos</h3><p>10:00 a. m. – 1:00 p. m.</p><a class="btn btn-ghost turno" href="https://wa.me/51936967506?text=%5BCURSO%20DE%20BARBER%C3%8DA%20-%20TURNO%20S%C3%81BADOS%20Y%20DOMINGOS%5D%20Hola%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20separar%20mi%20vacante%20en%20el%20curso%20de%20barber%C3%ADa%2C%20turno%20s%C3%A1bados%20y%20domingos%20de%2010%20a.%20m.%20a%201%20p.%20m." target="_blank" rel="noopener">Quiero este turno</a></div>
-      <div class="card reveal"><h3 style="margin-top:0">Domingo Full Day</h3><p>Un solo día a la semana</p><a class="btn btn-ghost turno" href="https://wa.me/51936967506?text=%5BCURSO%20DE%20BARBER%C3%8DA%20-%20TURNO%20DOMINGO%20FULL%20DAY%5D%20Hola%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20separar%20mi%20vacante%20en%20el%20curso%20de%20barber%C3%ADa%2C%20turno%20Domingo%20Full%20Day." target="_blank" rel="noopener">Quiero este turno</a></div>
-      <div class="card reveal"><h3 style="margin-top:0">Lunes y miércoles</h3><p>Mañana 10:00 a. m. – 1:00 p. m.<br>Tarde 3:00 – 6:00 p. m.</p><a class="btn btn-ghost turno" href="https://wa.me/51936967506?text=%5BCURSO%20DE%20BARBER%C3%8DA%20-%20TURNO%20LUNES%20Y%20MI%C3%89RCOLES%5D%20Hola%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20separar%20mi%20vacante%20en%20el%20curso%20de%20barber%C3%ADa%2C%20turno%20lunes%20y%20mi%C3%A9rcoles." target="_blank" rel="noopener">Quiero este turno</a></div>
-      <div class="card reveal"><h3 style="margin-top:0">Martes y jueves</h3><p>Mañana 10:00 a. m. – 1:00 p. m.<br>Tarde 3:00 – 6:00 p. m.</p><a class="btn btn-ghost turno" href="https://wa.me/51936967506?text=%5BCURSO%20DE%20BARBER%C3%8DA%20-%20TURNO%20MARTES%20Y%20JUEVES%5D%20Hola%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20separar%20mi%20vacante%20en%20el%20curso%20de%20barber%C3%ADa%2C%20turno%20martes%20y%20jueves." target="_blank" rel="noopener">Quiero este turno</a></div>
+    <p class="kicker">Nuevos grupos · Horarios</p>
+    <h2 id="horarios-t">Turnos que <span class="g">inician pronto</span></h2>
+    <p class="lead">Elige tu turno y separa tu vacante antes de que empiece el grupo. Te respondemos por WhatsApp.</p>
+    <div class="tgrid">
+      <article class="tcard reveal" id="t-sd" data-inicio="2026-11-21">
+        <div class="tc-top"><span class="tc-grupo">Fin de semana</span><span class="tc-falta" data-falta></span></div>
+        <div class="tc-fecha"><span class="tc-cal" aria-hidden="true"><small>NOV</small><b>21</b></span>
+          <span><span class="tc-ini" data-ini>Inicia el sábado 21 de noviembre</span><h3>☀️ Sábados y domingos</h3><span class="tc-hora">10:00 a. m. – 1:00 p. m.</span></span></div>
+        <a class="btn btn-wa tc-btn" href="https://wa.me/51936967506?text=%5BTURNO%20S%C3%81BADOS%20Y%20DOMINGOS%20-%20INICIA%2021%20NOV%5D%20Hola%2C%20vi%20la%20p%C3%A1gina%20web%20y%20deseo%20separar%20mi%20vacante%20en%20el%20turno%20s%C3%A1bados%20y%20domingos%20de%2010%20a.%20m.%20a%201%20p.%20m.%20que%20inicia%20el%20s%C3%A1bado%2021%20de%20noviembre." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:20px;height:20px;flex:0 0 auto"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/></svg>Separar este turno</a>
+      </article>
+      <article class="tcard reveal" id="t-dfd" data-inicio="2026-11-22">
+        <div class="tc-top"><span class="tc-grupo">Fin de semana</span><span class="tc-falta" data-falta></span></div>
+        <div class="tc-fecha"><span class="tc-cal" aria-hidden="true"><small>NOV</small><b>22</b></span>
+          <span><span class="tc-ini" data-ini>Inicia el domingo 22 de noviembre</span><h3>⭐ Domingo Full Day</h3><span class="tc-hora">Un solo día a la semana</span></span></div>
+        <a class="btn btn-wa tc-btn" href="https://wa.me/51936967506?text=%5BTURNO%20DOMINGO%20FULL%20DAY%20-%20INICIA%2022%20NOV%5D%20Hola%2C%20vi%20la%20p%C3%A1gina%20web%20y%20deseo%20separar%20mi%20vacante%20en%20el%20turno%20Domingo%20Full%20Day%20que%20inicia%20el%20domingo%2022%20de%20noviembre." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:20px;height:20px;flex:0 0 auto"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/></svg>Separar este turno</a>
+      </article>
+      <article class="tcard reveal" id="t-lm-m" data-inicio="2026-12-07">
+        <div class="tc-top"><span class="tc-grupo">Interdiario · Verano</span><span class="tc-falta" data-falta></span></div>
+        <div class="tc-fecha"><span class="tc-cal" aria-hidden="true"><small>DIC</small><b>7</b></span>
+          <span><span class="tc-ini" data-ini>Inicia el lunes 7 de diciembre</span><h3>🌞 Lunes y miércoles</h3><span class="tc-hora">Mañana · 10:00 a. m. – 1:00 p. m.</span></span></div>
+        <a class="btn btn-wa tc-btn" href="https://wa.me/51936967506?text=%5BTURNO%20LUNES%20Y%20MI%C3%89RCOLES%20MA%C3%91ANA%20-%20INICIA%207%20DIC%5D%20Hola%2C%20vi%20la%20p%C3%A1gina%20web%20y%20deseo%20separar%20mi%20vacante%20en%20el%20turno%20de%20verano%20lunes%20y%20mi%C3%A9rcoles%20de%2010%20a.%20m.%20a%201%20p.%20m.%20que%20inicia%20el%20lunes%207%20de%20diciembre." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:20px;height:20px;flex:0 0 auto"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/></svg>Separar este turno</a>
+      </article>
+      <article class="tcard reveal" id="t-lm-t" data-inicio="2026-12-07">
+        <div class="tc-top"><span class="tc-grupo">Interdiario · Verano</span><span class="tc-falta" data-falta></span></div>
+        <div class="tc-fecha"><span class="tc-cal" aria-hidden="true"><small>DIC</small><b>7</b></span>
+          <span><span class="tc-ini" data-ini>Inicia el lunes 7 de diciembre</span><h3>🌇 Lunes y miércoles</h3><span class="tc-hora">Tarde · 3:00 – 6:00 p. m.</span></span></div>
+        <a class="btn btn-wa tc-btn" href="https://wa.me/51936967506?text=%5BTURNO%20LUNES%20Y%20MI%C3%89RCOLES%20TARDE%20-%20INICIA%207%20DIC%5D%20Hola%2C%20vi%20la%20p%C3%A1gina%20web%20y%20deseo%20separar%20mi%20vacante%20en%20el%20turno%20de%20verano%20lunes%20y%20mi%C3%A9rcoles%20de%203%20p.%20m.%20a%206%20p.%20m.%20que%20inicia%20el%20lunes%207%20de%20diciembre." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:20px;height:20px;flex:0 0 auto"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/></svg>Separar este turno</a>
+      </article>
+      <article class="tcard tcard-pronto reveal" id="t-mj">
+        <div class="tc-top"><span class="tc-grupo">Interdiario</span><span class="tc-falta">Próximamente</span></div>
+        <div class="tc-fecha"><span class="tc-cal" aria-hidden="true"><small>PRONTO</small><b>?</b></span>
+          <span><span class="tc-ini">Fecha por confirmar</span><h3>📅 Martes y jueves</h3><span class="tc-hora">Mañana 10:00 a. m. – 1:00 p. m. · Tarde 3:00 – 6:00 p. m.</span></span></div>
+        <a class="btn btn-ghost tc-btn" href="https://wa.me/51936967506?text=%5BTURNO%20MARTES%20Y%20JUEVES%20-%20FECHA%20DE%20INICIO%5D%20Hola%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20saber%20cu%C3%A1ndo%20inicia%20el%20turno%20martes%20y%20jueves." target="_blank" rel="noopener">Avísame cuando abra</a>
+      </article>
     </div>
-    <p class="note" style="margin-top:14px">Toca el turno que te acomoda y te confirmamos la fecha de inicio por WhatsApp.</p>
   </div>
 </section>
 
@@ -665,6 +728,16 @@ footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-s
   <div class="wrap">Callao For Men Piura · Barbería y Escuela · Castilla, Piura</div>
 </footer>
 
+
+<aside class="flotantes" id="flotantes" aria-label="Turnos que inician pronto">
+  <button class="fl-head" id="flHead" type="button" aria-expanded="true" aria-controls="flLista"><span class="fl-dot" aria-hidden="true"></span><b>Nuevos turnos</b><span class="fl-tog" aria-hidden="true">–</span></button>
+  <div class="fl-lista" id="flLista">
+    <a class="fl-chip" href="#t-sd" data-ir="t-sd" data-inicio="2026-11-21"><span class="fl-ic">☀️</span><span><b>Sáb y Dom</b><small>Inicia sáb 21 nov</small></span></a>
+    <a class="fl-chip" href="#t-dfd" data-ir="t-dfd" data-inicio="2026-11-22"><span class="fl-ic">⭐</span><span><b>Domingos</b><small>Inicia dom 22 nov</small></span></a>
+    <a class="fl-chip" href="#t-lm-m" data-ir="t-lm-m" data-inicio="2026-12-07"><span class="fl-ic">🌞</span><span><b>Lun y Mié mañana</b><small>Inicia lun 7 dic</small></span></a>
+    <a class="fl-chip" href="#t-lm-t" data-ir="t-lm-t" data-inicio="2026-12-07"><span class="fl-ic">🌇</span><span><b>Lun y Mié tarde</b><small>Inicia lun 7 dic</small></span></a>
+  </div>
+</aside>
 <div class="sticky">
   <a class="btn btn-wa" href="https://wa.me/51936967506?text=%5BCURSO%20DE%20BARBER%C3%8DA%20-%206%20MESES%5D%20Hola%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20separar%20mi%20vacante%20en%20el%20curso%20de%20barber%C3%ADa." target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.1.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>
@@ -672,6 +745,41 @@ footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-s
   </a>
 </div>
 
+
+<script>
+/* Turnos que inician pronto: cuenta regresiva, estado y botones flotantes */
+(function(){
+  function hoyISO(){ var d=new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+  function dias(a,b){ var p=function(x){ var q=x.split('-'); return new Date(+q[0],q[1]-1,+q[2]); }; return Math.round((p(b)-p(a))/864e5); }
+  var H=hoyISO();
+  document.querySelectorAll('.tcard[data-inicio]').forEach(function(c){
+    var n=dias(H,c.dataset.inicio), f=c.querySelector('[data-falta]');
+    if(n>1){ f.textContent='Faltan '+n+' días'; }
+    else if(n===1){ f.textContent='¡Empieza mañana!'; f.classList.add('hoy'); }
+    else if(n===0){ f.textContent='¡Empieza hoy!'; f.classList.add('hoy'); }
+    else { f.textContent='Grupo en curso'; f.classList.add('curso'); var i=c.querySelector('[data-ini]'); if(i) i.textContent='Empezó el '+i.textContent.replace('Inicia el ',''); var b=c.querySelector('.tc-btn'); if(b) b.textContent='Pregunta por el próximo grupo'; }
+  });
+  var fl=document.getElementById('flotantes'); if(!fl) return;
+  fl.querySelectorAll('.fl-chip').forEach(function(ch){ if(dias(H,ch.dataset.inicio)<0) ch.remove(); });
+  if(!fl.querySelector('.fl-chip')){ fl.remove(); return; }
+  var head=document.getElementById('flHead');
+  function setCerrado(c){ fl.classList.toggle('cerrado',c); head.setAttribute('aria-expanded',String(!c)); head.querySelector('.fl-tog').textContent=c?'+':'–'; }
+  try{ if(sessionStorage.getItem('cfm_fl_cerrado')==='1') setCerrado(true); }catch(e){}
+  var tocado=false;
+  setTimeout(function(){ if(!tocado && !fl.classList.contains('cerrado')) setCerrado(true); }, 9000);
+  head.addEventListener('click',function(){ tocado=true; var c=!fl.classList.contains('cerrado'); setCerrado(c); try{ sessionStorage.setItem('cfm_fl_cerrado',c?'1':'0'); }catch(e){} });
+  fl.addEventListener('click',function(e){
+    var a=e.target.closest('.fl-chip'); if(!a) return; e.preventDefault(); tocado=true;
+    var card=document.getElementById(a.dataset.ir); if(!card) return;
+    card.scrollIntoView({behavior:'smooth',block:'center'});
+    card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash'); setTimeout(function(){ card.classList.remove('flash'); },1800);
+  });
+  var sec=document.getElementById('turnos');
+  if(sec && 'IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ es.forEach(function(x){ fl.classList.toggle('oculto', x.isIntersecting); }); },{threshold:.15}).observe(sec);
+  }
+})();
+</script>
 <script src="malla/malla.js?v=20261106g"></script>
 <script>
 // Solo un video suena a la vez
