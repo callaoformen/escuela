@@ -65,8 +65,15 @@ var CORE = (function () {
   function esFecha(s) { return /^\d{4}-\d{2}-\d{2}$/.test(String(s)); }
   function err(m) { throw new Error(m); }
   function soloDueno(ses) { if (ses.role !== 'dueno') err('Solo el dueño puede hacer esto'); }
-  function puede(ses, turno) { return ses.role === 'dueno' || ses.turnos.indexOf(turno) &gt;= 0; }
+  function puede(ses, turno) { return ses.role === 'dueno' || (ses.role === 'educador' &amp;&amp; ses.turnos.indexOf(turno) &gt;= 0); }
   function buscar(lista, id) { for (var i = 0; i &lt; lista.length; i++) if (String(lista[i].id) === String(id)) return lista[i]; return null; }
+  function pinEnUso(db, pin, exceptoId) {
+    if (pin === String(db.config.pinDueno)) return true;
+    for (var i = 0; i &lt; db.educadores.length; i++) if (String(db.educadores[i].pin) === pin &amp;&amp; String(db.educadores[i].id) !== String(exceptoId)) return true;
+    for (var j = 0; j &lt; db.alumnos.length; j++) if (db.alumnos[j].pin &amp;&amp; String(db.alumnos[j].pin) === pin &amp;&amp; String(db.alumnos[j].id) !== String(exceptoId)) return true;
+    return false;
+  }
+  function sinPin(a) { var o = {}; for (var k in a) if (k !== 'pin') o[k] = a[k]; return o; }
   function activo(v) { return !(v === false || v === 'false' || v === 'FALSE'); }
 
   function auth(db, pin) {
@@ -79,6 +86,10 @@ var CORE = (function () {
         return { role: 'educador', id: e.id, nombre: e.nombre, turnos: String(e.turnos || '').split(',').filter(function (t) { return TURNO_IDS.indexOf(t) &gt;= 0; }) };
       }
     }
+    for (var j = 0; j &lt; db.alumnos.length; j++) {
+      var a = db.alumnos[j];
+      if (a.pin &amp;&amp; String(a.pin) === pin &amp;&amp; a.estado !== 'Retirado') return { role: 'alumno', id: a.id, nombre: a.nombre, turnos: [a.turno] };
+    }
     return null;
   }
 
@@ -86,9 +97,20 @@ var CORE = (function () {
     if (ses.role === 'dueno') {
       return { sesion: ses, config: db.config, alumnos: db.alumnos, asistencia: db.asistencia, pagos: db.pagos, educadores: db.educadores, notas: db.notas };
     }
+    if (ses.role === 'alumno') {
+      var yo = buscar(db.alumnos, ses.id);
+      var eqA = db.educadores.filter(function (e) { return activo(e.activo) &amp;&amp; String(e.turnos).split(',').indexOf(yo.turno) &gt;= 0; }).map(function (e) { return { id: e.id, nombre: e.nombre, turnos: e.turnos }; });
+      return {
+        sesion: ses, config: { mensualidad: db.config.mensualidad, matricula: db.config.matricula, cuotas: db.config.cuotas, dias: db.config.dias },
+        alumnos: [sinPin(yo)],
+        asistencia: db.asistencia.filter(function (r) { return String(r.alumnoId) === String(yo.id); }),
+        pagos: db.pagos.filter(function (p) { return String(p.alumnoId) === String(yo.id); }),
+        educadores: eqA, notas: []
+      };
+    }
     var ids = {};
     var alumnos = db.alumnos.filter(function (a) { if (puede(ses, a.turno)) { ids[a.id] = 1; return true; } return false; })
-      .map(function (a) { var o = {}; for (var k in a) if (k !== 'mensualidad' &amp;&amp; k !== 'matricula') o[k] = a[k]; return o; });
+      .map(function (a) { var o = {}; for (var k in a) if (k !== 'mensualidad' &amp;&amp; k !== 'matricula' &amp;&amp; k !== 'pin') o[k] = a[k]; return o; });
     var cfg = { mensualidad: db.config.mensualidad, cuotas: db.config.cuotas, dias: db.config.dias };
     var equipo = db.educadores.filter(function (e) { return activo(e.activo); }).map(function (e) { return { id: e.id, nombre: e.nombre, turnos: e.turnos }; })
       .filter(function (e) { return String(e.turnos).split(',').some(function (t) { return ses.turnos.indexOf(t) &gt;= 0; }); });
@@ -168,6 +190,18 @@ var CORE = (function () {
       return vista(db, ses);
     },
 
+    pinAlumno: function (db, ses, d) {
+      soloDueno(ses);
+      var a = buscar(db.alumnos, d.alumnoId);
+      if (!a) err('No se encontró el alumno');
+      if (d.quitar) { a.pin = ''; return vista(db, ses); }
+      var pin = txt(d.pin, 8);
+      if (!/^\d{6}$/.test(pin)) err('El PIN del alumno debe tener 6 números');
+      if (pinEnUso(db, pin, a.id)) err('Ese PIN ya está en uso, elige otro');
+      a.pin = pin;
+      return vista(db, ses);
+    },
+
     borrarPago: function (db, ses, d) {
       soloDueno(ses);
       db.pagos = db.pagos.filter(function (p) { return String(p.id) !== String(d.id); });
@@ -180,8 +214,7 @@ var CORE = (function () {
       if (!nombre) err('Escribe el nombre del educador');
       var pin = txt(d.pin, 8);
       if (!/^\d{4,8}$/.test(pin)) err('El PIN debe tener de 4 a 8 números');
-      if (pin === String(db.config.pinDueno)) err('Ese PIN ya está en uso');
-      for (var i = 0; i &lt; db.educadores.length; i++) if (String(db.educadores[i].pin) === pin &amp;&amp; String(db.educadores[i].id) !== String(d.id)) err('Ese PIN ya lo tiene otro educador');
+      if (pinEnUso(db, pin, d.id)) err('Ese PIN ya está en uso, elige otro');
       var turnos = (d.turnos || []).filter(function (t) { return TURNO_IDS.indexOf(t) &gt;= 0; });
       if (!turnos.length) err('Asígnale al menos un turno');
       var e = d.id ? buscar(db.educadores, d.id) : null;
@@ -202,7 +235,7 @@ var CORE = (function () {
       if (d.pinDueno) {
         var p = txt(d.pinDueno, 8);
         if (!/^\d{4,8}$/.test(p)) err('El PIN debe tener de 4 a 8 números');
-        if (db.educadores.some(function (e) { return String(e.pin) === p; })) err('Ese PIN lo usa un educador');
+        if (db.educadores.some(function (e) { return String(e.pin) === p; }) || db.alumnos.some(function (a) { return a.pin &amp;&amp; String(a.pin) === p; })) err('Ese PIN ya está en uso, elige otro');
         db.config.pinDueno = p;
       }
       return vista(db, ses);
@@ -229,7 +262,7 @@ var SHEET_ID = '1WfRjx0BnOLy3h47_s4-Ts3uAEC9N2rtrrDBo9PJyNE4';
 CORE.setHoy(function () { return Utilities.formatDate(new Date(), 'America/Lima', 'yyyy-MM-dd'); });
 
 var TABLAS = {
-  alumnos:    { hoja: 'Alumnos',    cols: ['id', 'nombre', 'celular', 'turno', 'modulo', 'fechaInicio', 'estado', 'creado', 'notas', 'mensualidad', 'matricula'] },
+  alumnos:    { hoja: 'Alumnos',    cols: ['id', 'nombre', 'celular', 'turno', 'modulo', 'fechaInicio', 'estado', 'creado', 'notas', 'mensualidad', 'matricula', 'pin'] },
   asistencia: { hoja: 'Asistencia', cols: ['id', 'fecha', 'turno', 'alumnoId', 'estado', 'por', 'ts'] },
   pagos:      { hoja: 'Pagos',      cols: ['id', 'fecha', 'alumnoId', 'concepto', 'monto', 'medio', 'por', 'ts'] },
   educadores: { hoja: 'Educadores', cols: ['id', 'nombre', 'celular', 'pin', 'turnos', 'activo'] },
