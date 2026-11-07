@@ -87,7 +87,8 @@ var CORE = (function () {
       return { sesion: ses, config: db.config, alumnos: db.alumnos, asistencia: db.asistencia, pagos: db.pagos, educadores: db.educadores, notas: db.notas };
     }
     var ids = {};
-    var alumnos = db.alumnos.filter(function (a) { if (puede(ses, a.turno)) { ids[a.id] = 1; return true; } return false; });
+    var alumnos = db.alumnos.filter(function (a) { if (puede(ses, a.turno)) { ids[a.id] = 1; return true; } return false; })
+      .map(function (a) { var o = {}; for (var k in a) if (k !== 'mensualidad' &amp;&amp; k !== 'matricula') o[k] = a[k]; return o; });
     var cfg = { mensualidad: db.config.mensualidad, cuotas: db.config.cuotas, dias: db.config.dias };
     var equipo = db.educadores.filter(function (e) { return activo(e.activo); }).map(function (e) { return { id: e.id, nombre: e.nombre, turnos: e.turnos }; })
       .filter(function (e) { return String(e.turnos).split(',').some(function (t) { return ses.turnos.indexOf(t) &gt;= 0; }); });
@@ -114,9 +115,11 @@ var CORE = (function () {
       if (!a) { a = { id: uid(), creado: hoy(), estado: 'Activo', notas: '' }; db.alumnos.push(a); }
       a.nombre = nombre; a.celular = txt(d.celular, 15).replace(/[^\d+]/g, ''); a.turno = d.turno;
       a.modulo = modulo; a.fechaInicio = fecha;
+      if (d.mensualidad !== undefined) { var mp = Number(d.mensualidad); a.mensualidad = mp &gt; 0 ? mp : ''; }
+      if (d.matricula !== undefined) { var mm = Number(d.matricula); a.matricula = mm &gt; 0 ? mm : ''; }
       if (d.estado === 'Activo' || d.estado === 'Retirado' || d.estado === 'Egresado') a.estado = d.estado;
       if (d.pagoMatricula) {
-        db.pagos.push({ id: uid(), fecha: hoy(), alumnoId: a.id, concepto: 'Matrícula', monto: Number(d.montoMatricula) || Number(db.config.matricula) || 0, medio: MEDIOS.indexOf(d.medio) &gt;= 0 ? d.medio : 'Efectivo', por: ses.nombre, ts: new Date().toISOString() });
+        db.pagos.push({ id: uid(), fecha: hoy(), alumnoId: a.id, concepto: 'Matrícula', monto: Number(d.montoMatricula) || Number(a.matricula) || Number(db.config.matricula) || 0, medio: MEDIOS.indexOf(d.medio) &gt;= 0 ? d.medio : 'Efectivo', por: ses.nombre, ts: new Date().toISOString() });
       }
       return vista(db, ses);
     },
@@ -226,13 +229,13 @@ var SHEET_ID = '1WfRjx0BnOLy3h47_s4-Ts3uAEC9N2rtrrDBo9PJyNE4';
 CORE.setHoy(function () { return Utilities.formatDate(new Date(), 'America/Lima', 'yyyy-MM-dd'); });
 
 var TABLAS = {
-  alumnos:    { hoja: 'Alumnos',    cols: ['id', 'nombre', 'celular', 'turno', 'modulo', 'fechaInicio', 'estado', 'creado', 'notas'] },
+  alumnos:    { hoja: 'Alumnos',    cols: ['id', 'nombre', 'celular', 'turno', 'modulo', 'fechaInicio', 'estado', 'creado', 'notas', 'mensualidad', 'matricula'] },
   asistencia: { hoja: 'Asistencia', cols: ['id', 'fecha', 'turno', 'alumnoId', 'estado', 'por', 'ts'] },
   pagos:      { hoja: 'Pagos',      cols: ['id', 'fecha', 'alumnoId', 'concepto', 'monto', 'medio', 'por', 'ts'] },
   educadores: { hoja: 'Educadores', cols: ['id', 'nombre', 'celular', 'pin', 'turnos', 'activo'] },
   notas:      { hoja: 'Notas',      cols: ['id', 'fecha', 'alumnoId', 'modulo', 'autor', 'texto'] }
 };
-var NUMERICOS = { modulo: 1, monto: 1 };
+var NUMERICOS = { modulo: 1, monto: 1, mensualidad: 1, matricula: 1 };
 var CONFIG_DEF = { pinDueno: '', mensualidad: 197, matricula: 59, cuotas: 6, dias: 28, meta: 100 };
 
 function doGet() {
@@ -297,6 +300,7 @@ function escribir(ss, db) {
   Object.keys(TABLAS).forEach(function (k) {
     var t = TABLAS[k], sh = hoja(ss, t.hoja, t.cols);
     var filas = db[k].map(function (o) { return t.cols.map(function (c) { return o[c] == null ? '' : String(o[c]); }); });
+    sh.getRange(1, 1, 1, t.cols.length).setNumberFormat('@').setValues([t.cols]);
     var n = sh.getLastRow();
     if (n &gt; 1) sh.getRange(2, 1, n - 1, t.cols.length).clearContent();
     if (filas.length) {
