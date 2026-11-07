@@ -297,6 +297,30 @@ main{padding:18px 0 110px;overflow-x:hidden}
 .edu-card .row{display:flex;align-items:center;gap:12px}
 .pinbox{font-family:var(--display);letter-spacing:.3em;font-size:18px;background:var(--panel-2);border-radius:10px;padding:6px 10px}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap}
+/* Pagos: precio y cronograma */
+.price-card{display:flex;align-items:center;gap:12px;background:var(--panel-2);border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:12px}
+.price-card .pc-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(227,167,47,.15);font-size:20px;flex:0 0 auto}
+.price-card .pc-tx{flex:1;min-width:0}
+.price-card .pc-tx b{font-family:var(--display);font-size:22px;display:block;line-height:1.1}
+.price-card .pc-tx span{display:block;font-size:12px;color:var(--muted)}
+.sumrow{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px;text-align:center}
+.sumrow div{background:var(--panel-2);border-radius:12px;padding:8px 4px}
+.sumrow b{display:block;font-family:var(--display);font-size:17px}
+.sumrow span{font-size:11px;color:var(--muted)}
+.crono-t{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:13px;color:var(--muted);margin:16px 0 4px}
+.crono-row{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.crono-row:first-of-type{border-top:0}
+.crono-n{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-family:var(--display);font-size:15px;background:var(--panel-3);color:var(--muted)}
+.crono-row.pagada .crono-n{background:rgba(92,201,138,.2);color:#8be0ae}
+.crono-row.vencida .crono-n{background:rgba(239,91,91,.22);color:#ff8f8f}
+.crono-row.hoy .crono-n,.crono-row.proxima .crono-n{background:var(--gold);color:#1a1205}
+.crono-row .cr-tx b{display:block;font-size:14px}
+.crono-row .cr-tx span{font-size:12px;color:var(--muted)}
+.crono-row .cr-r{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.crono-row .cr-r b{font-variant-numeric:tabular-nums}
+.agenda-day{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:13px;color:var(--gold-soft);padding:12px 0 2px;display:flex;justify-content:space-between;gap:8px}
+.agenda-day span{color:var(--muted);text-transform:none;letter-spacing:0;font-family:var(--body)}
+.quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 
 /* Guía de clases */
 .g-mods{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-bottom:12px}
@@ -384,7 +408,8 @@ var CORE = (function () {
       return { sesion: ses, config: db.config, alumnos: db.alumnos, asistencia: db.asistencia, pagos: db.pagos, educadores: db.educadores, notas: db.notas };
     }
     var ids = {};
-    var alumnos = db.alumnos.filter(function (a) { if (puede(ses, a.turno)) { ids[a.id] = 1; return true; } return false; });
+    var alumnos = db.alumnos.filter(function (a) { if (puede(ses, a.turno)) { ids[a.id] = 1; return true; } return false; })
+      .map(function (a) { var o = {}; for (var k in a) if (k !== 'mensualidad' && k !== 'matricula') o[k] = a[k]; return o; });
     var cfg = { mensualidad: db.config.mensualidad, cuotas: db.config.cuotas, dias: db.config.dias };
     var equipo = db.educadores.filter(function (e) { return activo(e.activo); }).map(function (e) { return { id: e.id, nombre: e.nombre, turnos: e.turnos }; })
       .filter(function (e) { return String(e.turnos).split(',').some(function (t) { return ses.turnos.indexOf(t) >= 0; }); });
@@ -411,9 +436,11 @@ var CORE = (function () {
       if (!a) { a = { id: uid(), creado: hoy(), estado: 'Activo', notas: '' }; db.alumnos.push(a); }
       a.nombre = nombre; a.celular = txt(d.celular, 15).replace(/[^\d+]/g, ''); a.turno = d.turno;
       a.modulo = modulo; a.fechaInicio = fecha;
+      if (d.mensualidad !== undefined) { var mp = Number(d.mensualidad); a.mensualidad = mp > 0 ? mp : ''; }
+      if (d.matricula !== undefined) { var mm = Number(d.matricula); a.matricula = mm > 0 ? mm : ''; }
       if (d.estado === 'Activo' || d.estado === 'Retirado' || d.estado === 'Egresado') a.estado = d.estado;
       if (d.pagoMatricula) {
-        db.pagos.push({ id: uid(), fecha: hoy(), alumnoId: a.id, concepto: 'Matrícula', monto: Number(d.montoMatricula) || Number(db.config.matricula) || 0, medio: MEDIOS.indexOf(d.medio) >= 0 ? d.medio : 'Efectivo', por: ses.nombre, ts: new Date().toISOString() });
+        db.pagos.push({ id: uid(), fecha: hoy(), alumnoId: a.id, concepto: 'Matrícula', monto: Number(d.montoMatricula) || Number(a.matricula) || Number(db.config.matricula) || 0, medio: MEDIOS.indexOf(d.medio) >= 0 ? d.medio : 'Efectivo', por: ses.nombre, ts: new Date().toISOString() });
       }
       return vista(db, ses);
     },
@@ -586,7 +613,7 @@ const API_FIJA = (API_URL && API_URL.indexOf('__')!==0) ? API_URL : '';
 (function(){ try{ const u=new URL(location.href); const a=u.searchParams.get('api'); if(a && /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(a)){ localStorage.setItem('cfm_api', JSON.stringify(a)); u.searchParams.delete('api'); history.replaceState(null,'',u.pathname+u.search); } }catch(e){} })();
 const API_ACTIVA = API_FIJA || lsGet('cfm_api','');
 const DEMO = !API_ACTIVA;
-const DEMO_KEY = 'cfm_sistema_demo_v2';
+const DEMO_KEY = 'cfm_sistema_demo_v3';
 const API = {
   async call(accion, datos){
     const pin = S.pin;
@@ -623,7 +650,7 @@ function semilla(){
   let seed = 7; const rnd = () => (seed = (seed*9301+49297)%233280)/233280;
   plan.forEach((p,i)=>{
     const id='a'+(i+1); const ini=addD(H,-p[2]);
-    db.alumnos.push({ id, nombre:nombres[i], celular:'9'+String(10000000+i*731).slice(0,8), turno:p[0], modulo:p[1], fechaInicio:ini, estado:'Activo', creado:ini, notas:'' });
+    db.alumnos.push({ id, nombre:nombres[i], celular:'9'+String(10000000+i*731).slice(0,8), turno:p[0], modulo:p[1], fechaInicio:ini, estado:'Activo', creado:ini, notas:'', mensualidad: i===4?220:'' });
     if(i!==7 && i!==16) db.pagos.push({ id:'pm'+i, fecha:ini, alumnoId:id, concepto:'Matrícula', monto:59, medio:'Yape', por:'Dirección', ts:'' });
     const vencidas = Math.min(6, Math.floor(p[2]/28)+1);
     const pagadas = Math.max(0, vencidas - (i%4===1 ? 1 : 0) - (i===7?1:0));
@@ -684,8 +711,27 @@ function asisGlobal(dias=30){
 function hayClase(turno, f=hoy()){ return TMAP[turno].wd.includes(pISO(f).getDay()); }
 function ultimaClase(turno){ let f=hoy(); for(let i=0;i<8;i++){ if(hayClase(turno,f)) return f; f=addD(f,-1);} return hoy(); }
 function educadoresDe(turno){ return (S.data.educadores||[]).filter(e=>String(e.turnos).split(',').includes(turno) && e.activo!==false && e.activo!=='false'); }
+function precioMens(a){ const v=Number(a?.mensualidad); return v>0 ? v : (Number(S.data.config.mensualidad)||197); }
+function precioMat(a){ const v=Number(a?.matricula); return v>0 ? v : (Number(S.data.config.matricula)||59); }
+function esPrecioEspecial(a){ return precioMens(a)!==(Number(S.data.config.mensualidad)||197) || precioMat(a)!==(Number(S.data.config.matricula)||59); }
+/* Cronograma de cuotas desde la fecha de inicio: cada pago de mensualidad cubre la cuota más antigua pendiente */
+function cronograma(a){
+  const c = S.data.config, N = Number(c.cuotas)||6, D = Number(c.dias)||28, mens = precioMens(a), H = hoy();
+  const pagos = S.data.pagos.filter(p=>p.alumnoId===a.id && p.concepto==='Mensualidad').sort((x,y)=>x.fecha.localeCompare(y.fecha));
+  let siguienteMarcada = false;
+  return Array.from({length:N}, (_,i)=>{
+    const fecha = addD(a.fechaInicio, D*i), pago = pagos[i] || null, falta = dEntre(H, fecha);
+    let st;
+    if(pago) st = 'pagada';
+    else if(falta < 0) st = 'vencida';
+    else if(!siguienteMarcada){ st = falta===0 ? 'hoy' : 'proxima'; siguienteMarcada = true; }
+    else st = 'pendiente';
+    return { n:i+1, fecha, falta, monto: pago ? Number(pago.monto)||mens : mens, st, pago };
+  });
+}
+const CRONO_ST = { pagada:['b-ok','✓ Pagada'], vencida:['b-bad','Vencida'], hoy:['b-warn','Vence hoy'], proxima:['b-gold','Próxima'], pendiente:['','Pendiente'] };
 function estadoPago(a){
-  const c = S.data.config; const mens = Number(c.mensualidad)||197, mat = Number(c.matricula)||59, N = Number(c.cuotas)||6, D = Number(c.dias)||28;
+  const c = S.data.config; const mens = precioMens(a), mat = precioMat(a), N = Number(c.cuotas)||6, D = Number(c.dias)||28;
   const ps = S.data.pagos.filter(p=>p.alumnoId===a.id);
   const pagadas = ps.filter(p=>p.concepto==='Mensualidad').length;
   const matOk = ps.some(p=>p.concepto==='Matrícula');
@@ -1036,15 +1082,21 @@ function vPagos(){
   const pronto = act.filter(x=>x.p.cls==='b-warn').sort((x,y)=>x.p.faltan-y.p.faltan);
   const ok = act.filter(x=>x.p.cls==='b-ok');
   const totalDeuda = deben.reduce((s,x)=>s+x.p.deuda,0);
-  const esperado = act.length * (Number(d.config.mensualidad)||197);
+  const esperado = act.reduce((x,{a})=>x+precioMens(a),0);
+  const limite = addD(hoy(), 30);
+  const proximos = [];
+  act.forEach(({a})=>cronograma(a).forEach(k=>{ if((k.st==='hoy'||k.st==='proxima'||k.st==='pendiente') && k.fecha<=limite) proximos.push({a,k}); }));
+  proximos.sort((x,y)=>x.k.fecha.localeCompare(y.k.fecha) || x.a.nombre.localeCompare(y.a.nombre));
+  const totalProx = proximos.reduce((x,{k})=>x+k.monto,0);
+  const dias = [...new Set(proximos.map(x=>x.k.fecha))];
   const fila = ({a,p}) => `<div class="st" style="--mc:${MOD(a.modulo).color}">
       <button data-act="perfil" data-id="${a.id}" style="display:contents;background:none;border:0;color:inherit;text-align:left">
         <span class="av">${esc(ini(a.nombre))}</span>
-        <span class="nm"><b>${esc(a.nombre)}</b><span>${p.estado==='Debe'?`Debe ${soles(p.deuda)}${!p.matOk?' (incluye matrícula)':''}`:p.proximo?`Próximo pago: ${fCorta(p.proximo)}`:'Curso pagado'} · cuota ${Math.min(p.pagadas+1,p.N)}/${p.N}</span></span>
+        <span class="nm"><b>${esc(a.nombre)}</b><span>${p.estado==='Debe'?`Debe ${soles(p.deuda)}${!p.matOk?' (incluye matrícula)':''}`:p.proximo?`Próximo pago: ${fCorta(p.proximo)}`:'Curso pagado'} · cuota ${Math.min(p.pagadas+1,p.N)}/${p.N}${esPrecioEspecial(a)?` · ⭐ ${soles(precioMens(a))}/mes`:''}</span></span>
       </button>
       ${p.cls!=='b-ok'||p.proximo?`<button class="btn btn-line btn-sm" data-act="nuevoPago" data-id="${a.id}">Cobrar</button>`:''}
     </div>`;
-  return `<div class="page-title"><div><p class="kicker">Mensualidad ${soles(d.config.mensualidad)} cada 28 días</p><h1>Pagos</h1></div>
+  return `<div class="page-title"><div><p class="kicker">Mensualidad estándar ${soles(d.config.mensualidad)} · cada 28 días</p><h1>Pagos</h1></div>
       <button class="btn btn-gold btn-sm" data-act="nuevoPago">+ Registrar</button></div>
     <div class="grid g2">
       <div class="stat" style="--c:var(--ok)"><div class="lab">Cobrado este mes</div><div class="val">${soles(cobrado)}</div><div class="hint">${delMes.length} pago${delMes.length===1?'':'s'} registrados</div></div>
@@ -1057,6 +1109,17 @@ function vPagos(){
       <div class="list-card">${deben.length?deben.map(fila).join(''):'<p class="muted" style="margin:0;padding:14px 0">Nadie debe. 👏</p>'}</div></section>
     <section class="sec"><div class="sec-h"><h2>🟡 Vencen pronto</h2><span class="badge b-warn">${pronto.length}</span></div>
       <div class="list-card">${pronto.length?pronto.map(fila).join(''):'<p class="muted" style="margin:0;padding:14px 0">Ningún pago vence en los próximos 3 días.</p>'}</div></section>
+    <section class="sec"><div class="sec-h"><h2>📅 Próximos cobros</h2><span class="badge b-gold">${soles(totalProx)}</span></div>
+      <p class="small muted" style="margin:-6px 0 8px">Cuotas que vencen en los próximos 30 días, según la fecha de inicio de cada alumno.</p>
+      <div class="list-card">${proximos.length ? dias.map(f=>{ const del = proximos.filter(x=>x.k.fecha===f), dd = dEntre(hoy(), f); return `
+        <div class="agenda-day">${cap(fLarga(f))}<span>${dd===0?'Hoy':dd===1?'Mañana':`En ${dd} días`} · ${soles(del.reduce((x,{k})=>x+k.monto,0))}</span></div>
+        ${del.map(({a,k})=>`<div class="st" style="--mc:${MOD(a.modulo).color}">
+          <button data-act="perfil" data-id="${a.id}" style="display:contents;background:none;border:0;color:inherit;text-align:left">
+            <span class="av">${esc(ini(a.nombre))}</span>
+            <span class="nm"><b>${esc(a.nombre)}</b><span>Cuota ${k.n} de ${cronograma(a).length} · ${soles(k.monto)}${esPrecioEspecial(a)?' ⭐':''}</span></span>
+          </button>
+          <button class="btn btn-line btn-sm" data-act="nuevoPago" data-id="${a.id}">Cobrar</button></div>`).join('')}`; }).join('')
+        : '<p class="muted" style="margin:0;padding:14px 0">No hay cuotas por vencer en los próximos 30 días.</p>'}</div></section>
     <section class="sec"><div class="sec-h"><h2>🟢 Al día</h2><span class="badge b-ok">${ok.length}</span></div>
       <div class="list-card">${ok.length?ok.map(fila).join(''):'<p class="muted" style="margin:0;padding:14px 0">—</p>'}</div></section>`;
 }
@@ -1137,13 +1200,33 @@ function hojaPerfil(id){
       ${s.ultimos.length?`<div class="small muted" style="margin-top:10px">Últimas clases:</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${s.ultimos.map(r=>`<span class="cell ${r.estado}" title="${fCorta(r.fecha)}: ${EST[r.estado].t}">${EST[r.estado].ic}</span>`).join('')}</div>`:'<p class="small dim" style="margin:10px 0 0">Aún no tiene asistencias registradas.</p>'}
     </div>
 
-    ${p?`<div class="box"><h3>Pagos</h3>
+    ${p?(()=>{ const cr = cronograma(a), mens = precioMens(a), mat = precioMat(a);
+      const totalCurso = mat + cr.reduce((x,k)=>x+k.monto,0);
+      const pagado = p.pagos.filter(x=>x.concepto==='Mensualidad'||x.concepto==='Matrícula').reduce((x,y)=>x+Number(y.monto||0),0);
+      return `<div class="box"><h3>Pagos</h3>
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="badge ${p.cls}" style="font-size:14px">${p.estado}</span><span class="small muted">${p.deuda?`Debe <b style="color:var(--text)">${soles(p.deuda)}</b>`:''}</span></div>
-      <div class="small muted" style="margin-top:10px;display:flex;justify-content:space-between"><span>Mensualidades pagadas</span><b class="num" style="color:var(--text)">${p.pagadas} de ${p.N}</b></div>
-      <div class="progress" style="margin-top:6px"><i style="width:${p.pagadas/p.N*100}%"></i></div>
-      <div class="small muted" style="margin-top:8px">${p.matOk?'✅ Matrícula pagada':'⚠️ Matrícula pendiente'}${p.proximo?` · Próxima cuota: <b style="color:var(--text)">${fCorta(p.proximo)}</b>`:''}</div>
-      <div style="margin-top:10px">${p.pagos.slice(0,6).map(x=>`<div class="pay-row"><span>${fCorta(x.fecha)} · ${esc(x.concepto)} <span class="dim">(${esc(x.medio)})</span></span><span style="display:flex;gap:8px;align-items:center"><b>${soles(x.monto)}</b><button class="icon-btn" style="width:30px;height:30px;font-size:12px" data-act="borrarPago" data-id="${x.id}" data-al="${a.id}" aria-label="Borrar pago">🗑</button></span></div>`).join('')}</div>
-      <button class="btn btn-gold btn-sm btn-block" style="margin-top:10px" data-act="nuevoPago" data-id="${a.id}">+ Registrar pago</button></div>`:''}
+      <div class="price-card">
+        <span class="pc-ic">💲</span>
+        <div class="pc-tx"><span>Mensualidad de este alumno</span><b class="num">${soles(mens)}</b><span>${esPrecioEspecial(a)?'⭐ Precio especial':'Precio estándar'} · matrícula ${soles(mat)}</span></div>
+        <button class="btn btn-line btn-sm" data-act="precio" data-id="${a.id}">Cambiar</button>
+      </div>
+      <div class="sumrow">
+        <div><b class="num">${soles(totalCurso)}</b><span>Total del curso</span></div>
+        <div><b class="num" style="color:var(--ok)">${soles(pagado)}</b><span>Pagado</span></div>
+        <div><b class="num" style="color:${totalCurso-pagado>0?'var(--gold-soft)':'var(--ok)'}">${soles(Math.max(0,totalCurso-pagado))}</b><span>Falta pagar</span></div>
+      </div>
+      <p class="crono-t">📅 Cronograma de pagos</p>
+      <div>
+        <div class="crono-row ${p.matOk?'pagada':'vencida'}"><span class="crono-n">M</span>
+          <span class="cr-tx"><b>Matrícula</b><span>Al inscribirse · ${fCorta(a.fechaInicio)}</span></span>
+          <span class="cr-r"><b>${soles(mat)}</b><span class="badge ${p.matOk?'b-ok':'b-bad'}">${p.matOk?'✓ Pagada':'Pendiente'}</span></span></div>
+        ${cr.map(k=>{ const [cls,txt]=CRONO_ST[k.st]; const cuando = k.pago ? `Pagó el ${fCorta(k.pago.fecha)}` : k.st==='vencida' ? `Venció hace ${-k.falta} día${k.falta===-1?'':'s'}` : k.falta===0 ? 'Hoy' : `En ${k.falta} día${k.falta===1?'':'s'}`; return `
+        <div class="crono-row ${k.st}"><span class="crono-n">${k.n}</span>
+          <span class="cr-tx"><b>Cuota ${k.n} · ${cap(pISO(k.fecha).toLocaleDateString('es-PE',{weekday:'short',day:'numeric',month:'short'}))}</b><span>${cuando}</span></span>
+          <span class="cr-r"><b>${soles(k.monto)}</b><span class="badge ${cls}">${txt}</span></span></div>`; }).join('')}
+      </div>
+      ${p.pagos.length?`<p class="crono-t">🧾 Pagos registrados</p><div>${p.pagos.slice(0,8).map(x=>`<div class="pay-row"><span>${fCorta(x.fecha)} · ${esc(x.concepto)} <span class="dim">(${esc(x.medio)})</span></span><span style="display:flex;gap:8px;align-items:center"><b>${soles(x.monto)}</b><button class="icon-btn" style="width:30px;height:30px;font-size:12px" data-act="borrarPago" data-id="${x.id}" data-al="${a.id}" aria-label="Borrar pago">🗑</button></span></div>`).join('')}</div>`:''}
+      <button class="btn btn-gold btn-sm btn-block" style="margin-top:10px" data-act="nuevoPago" data-id="${a.id}">+ Registrar pago</button></div>`; })():''}
 
     <div class="box"><h3>Observaciones del educador</h3>
       ${notas.length?notas.map(n=>`<div class="note-item"><small>${fCorta(n.fecha)} · Módulo ${n.modulo} · ${esc(n.autor)}</small><div style="margin-top:3px">${esc(n.texto)}</div></div>`).join(''):'<p class="small dim" style="margin:0 0 8px">Sin observaciones todavía.</p>'}
@@ -1172,17 +1255,46 @@ function hojaAlumno(id, turnoDef){
         ${MODULOS.map(m=>`<label class="opt"><input type="radio" name="fMod" value="${m.n}" ${(Number(a?.modulo)||1)===m.n?'checked':''}><span style="${''}">${m.n}</span></label>`).join('')}</div>
         <span class="small dim">Si es nuevo, déjalo en 1.</span></div>
       <div class="field"><label for="fIni">Fecha de inicio</label><input id="fIni" type="date" value="${esc(a?.fechaInicio||hoy())}"><span class="small dim">Desde esta fecha se cuentan las mensualidades cada 28 días.</span></div>
-      ${!a?`<label class="switch" style="margin-bottom:14px"><span><b>Pagó la matrícula hoy</b><br><span class="small muted">Se registra ${soles(S.data.config.matricula)} en pagos</span></span><input type="checkbox" id="fMat" checked></label>`:''}
+      <div class="field" style="margin-bottom:6px"><span class="lbl">Precio para este alumno</span>
+        <div class="grid g2"><div><label for="fMens" class="small muted">Mensualidad (S/)</label><input id="fMens" type="number" inputmode="decimal" min="1" step="0.5" value="${esc(precioMens(a))}" style="width:100%;margin-top:4px"></div>
+        <div><label for="fMatP" class="small muted">Matrícula (S/)</label><input id="fMatP" type="number" inputmode="decimal" min="1" step="0.5" value="${esc(precioMat(a))}" style="width:100%;margin-top:4px"></div></div>
+        <span class="small dim">Por defecto ${soles(S.data.config.mensualidad)} al mes y ${soles(S.data.config.matricula)} de matrícula. Cámbialo solo si a este alumno le cobras otro monto.</span></div>
+      ${!a?`<label class="switch" style="margin:10px 0 14px"><span><b>Pagó la matrícula hoy</b><br><span class="small muted">Se registra en pagos con el monto de arriba</span></span><input type="checkbox" id="fMat" checked></label>`:'<div style="height:10px"></div>'}
       <button class="btn btn-gold btn-block" type="submit">${a?'Guardar cambios':'Inscribir alumno'}</button>
     </form>`);
+}
+
+function hojaPrecio(id){
+  const a = S.data.alumnos.find(x=>x.id===id); if(!a) return;
+  const c = S.data.config, N = Number(c.cuotas)||6;
+  const pagadas = S.data.pagos.filter(p=>p.alumnoId===a.id && p.concepto==='Mensualidad').length;
+  abrirHoja(`${hHead('Precio del alumno', esc(a.nombre))}
+    <form id="precioForm" data-id="${a.id}">
+      <div class="notice" style="margin-bottom:14px">El precio estándar es ${soles(c.mensualidad)} al mes. Aquí puedes ponerle a <b>${esc(a.nombre.split(' ')[0])}</b> un monto distinto. Se aplica a las cuotas que aún no ha pagado${pagadas?` (ya pagó ${pagadas} de ${N}; esas no cambian)`:''}.</div>
+      <div class="field"><label for="prMens">Mensualidad (S/)</label><input id="prMens" type="number" inputmode="decimal" min="1" step="0.5" value="${esc(precioMens(a))}" required>
+        <div class="quick">${[Number(c.mensualidad)||197, 220, 250, 300].filter((v,i,arr)=>arr.indexOf(v)===i).map(v=>`<button type="button" class="chip" data-act="prQuick" data-v="${v}">${soles(v)}${v===Number(c.mensualidad)?' (estándar)':''}</button>`).join('')}</div></div>
+      <div class="field"><label for="prMat">Matrícula (S/)</label><input id="prMat" type="number" inputmode="decimal" min="1" step="0.5" value="${esc(precioMat(a))}" required></div>
+      <div class="card" style="margin-bottom:14px"><div class="small muted">Con este precio, el curso completo cuesta</div><b id="prTotal" class="num" style="font-family:var(--display);font-size:26px;color:var(--gold-soft)"></b></div>
+      <button class="btn btn-gold btn-block" type="submit">Guardar precio</button>
+      <button class="btn btn-ghost btn-block" type="button" style="margin-top:8px" data-act="prEstandar">Volver al precio estándar</button>
+    </form>`);
+  precioTotal();
+}
+function precioTotal(){
+  const a = S.data.alumnos.find(x=>x.id===$('#precioForm')?.dataset.id); if(!a) return;
+  const N = Number(S.data.config.cuotas)||6, mens = Number($('#prMens').value)||0, mat = Number($('#prMat').value)||0;
+  const pagos = S.data.pagos.filter(p=>p.alumnoId===a.id && p.concepto==='Mensualidad').sort((x,y)=>x.fecha.localeCompare(y.fecha));
+  let tot = mat; for(let i=0;i<N;i++) tot += pagos[i] ? Number(pagos[i].monto)||mens : mens;
+  $('#prTotal').textContent = soles(tot);
 }
 
 function hojaPago(alumnoId){
   const act = activos(S.data.alumnos).sort((a,b)=>a.nombre.localeCompare(b.nombre));
   const c = S.data.config;
   let sug = 'Mensualidad';
-  if(alumnoId){ const a=S.data.alumnos.find(x=>x.id===alumnoId); if(a && !estadoPago(a).matOk) sug='Matrícula'; }
-  const monto = sug==='Matrícula'?c.matricula:c.mensualidad;
+  const al = alumnoId ? S.data.alumnos.find(x=>x.id===alumnoId) : null;
+  if(al && !estadoPago(al).matOk) sug='Matrícula';
+  const monto = sug==='Matrícula' ? precioMat(al) : precioMens(al);
   abrirHoja(`${hHead('Registrar pago')}
     <form id="pagoForm">
       <div class="field"><label for="pAl">Alumno</label><select id="pAl" required><option value="">Elige al alumno…</option>${act.map(a=>`<option value="${a.id}" ${a.id===alumnoId?'selected':''}>${esc(a.nombre)} — ${esc(tNombre(a.turno))}</option>`).join('')}</select></div>
@@ -1256,8 +1368,19 @@ sheet.addEventListener('submit', async e=>{
     const d = { id:f.dataset.id||undefined, nombre:$('#fNom').value, celular:$('#fCel').value, turno, modulo:f.querySelector('input[name=fMod]:checked')?.value||1, fechaInicio:$('#fIni').value };
     const actual = f.dataset.id ? S.data.alumnos.find(x=>x.id===f.dataset.id) : null;
     if(actual) d.estado = actual.estado;
-    if(!f.dataset.id && $('#fMat')?.checked){ d.pagoMatricula = true; d.montoMatricula = S.data.config.matricula; d.medio='Efectivo'; }
+    const cfg = S.data.config, vM = Number($('#fMens').value), vMat = Number($('#fMatP').value);
+    if(!(vM>0) || !(vMat>0)){ toast('Revisa los montos de mensualidad y matrícula', true); return; }
+    d.mensualidad = vM===Number(cfg.mensualidad) ? 0 : vM;
+    d.matricula = vMat===Number(cfg.matricula) ? 0 : vMat;
+    if(!f.dataset.id && $('#fMat')?.checked){ d.pagoMatricula = true; d.montoMatricula = vMat; d.medio='Efectivo'; }
     if(await ejecutar('guardarAlumno', d, f.dataset.id?'Datos actualizados':'¡Alumno inscrito! 🎉')){ cerrarHoja(); render(); }
+  }
+  if(f.id==='precioForm'){
+    const a = S.data.alumnos.find(x=>x.id===f.dataset.id); if(!a) return;
+    const cfg = S.data.config, vM = Number($('#prMens').value), vMat = Number($('#prMat').value);
+    if(!(vM>0) || !(vMat>0)){ toast('Escribe montos válidos', true); return; }
+    const d = { ...a, mensualidad: vM===Number(cfg.mensualidad)?0:vM, matricula: vMat===Number(cfg.matricula)?0:vMat };
+    if(await ejecutar('guardarAlumno', d, `Precio actualizado: ${soles(vM)} al mes`)){ hojaPerfil(a.id); render(); }
   }
   if(f.id==='pagoForm'){
     const d = { alumnoId:$('#pAl').value, concepto:f.querySelector('input[name=pCon]:checked')?.value, monto:$('#pMonto').value, fecha:$('#pFecha').value, medio:f.querySelector('input[name=pMed]:checked')?.value };
@@ -1272,8 +1395,13 @@ sheet.addEventListener('submit', async e=>{
     if(await ejecutar('agregarNota', { alumnoId:f.dataset.id, texto:tx }, 'Observación guardada')){ hojaPerfil(f.dataset.id); render(); }
   }
 });
+sheet.addEventListener('input', e=>{ if(e.target.id==='prMens'||e.target.id==='prMat') precioTotal(); });
 sheet.addEventListener('change', e=>{
-  if(e.target.name==='pCon'){ const c=S.data.config; const v=e.target.value; $('#pMonto').value = v==='Matrícula'?c.matricula:v==='Mensualidad'?c.mensualidad:v==='Especialización'?259:''; }
+  if(e.target.name==='pCon' || e.target.id==='pAl'){
+    const a = S.data.alumnos.find(x=>x.id===$('#pAl').value);
+    const v = $('input[name=pCon]:checked', sheet)?.value;
+    $('#pMonto').value = v==='Matrícula' ? precioMat(a) : v==='Mensualidad' ? precioMens(a) : v==='Especialización' ? 259 : '';
+  }
 });
 
 document.addEventListener('click', async e=>{
@@ -1312,6 +1440,9 @@ document.addEventListener('click', async e=>{
       if(await ejecutar('guardarAlumno', { ...a, estado:e2 }, e2==='Activo'?'Alumno reactivado':`Marcado como ${e2.toLowerCase()}`)){ cerrarHoja(); render(); }
       break; }
     case 'nuevoPago': hojaPago(id); break;
+    case 'precio': hojaPrecio(id); break;
+    case 'prQuick': $('#prMens').value = b.dataset.v; precioTotal(); break;
+    case 'prEstandar': $('#prMens').value = S.data.config.mensualidad; $('#prMat').value = S.data.config.matricula; precioTotal(); break;
     case 'borrarPago': if(confirmar('¿Borrar este pago?') && await ejecutar('borrarPago', { id }, 'Pago borrado')){ hojaPerfil(b.dataset.al); render(); } break;
     case 'nuevoEdu': hojaEdu(null); break;
     case 'editEdu': hojaEdu(id); break;
