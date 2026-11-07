@@ -193,6 +193,13 @@ section{padding:64px 0}
 
 /* Beneficios */
 .grid{display:grid;gap:14px;margin-top:30px}
+.plat-cta{display:flex;align-items:center;gap:14px;margin:22px 0 0;padding:16px 18px;border-radius:20px;text-decoration:none;color:var(--text);background:linear-gradient(135deg,rgba(227,167,47,.2),rgba(227,167,47,.05));border:1px solid var(--gold);flex-wrap:wrap}
+.plat-ic{font-size:30px;width:54px;height:54px;border-radius:14px;display:grid;place-items:center;background:rgba(0,0,0,.35);flex:0 0 auto}
+.plat-tx{flex:1 1 220px;min-width:0}
+.plat-tx b{display:block;font-family:var(--display);text-transform:uppercase;letter-spacing:.03em;font-size:19px;color:var(--gold-soft)}
+.plat-tx span{display:block;font-size:15px;color:var(--muted);margin-top:2px}
+.plat-go{flex:0 0 auto;font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-weight:600;color:#1a1205;background:var(--gold);border-radius:999px;padding:12px 18px}
+@media(max-width:520px){.plat-go{width:100%;text-align:center}}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;transition:transform .25s,border-color .25s}
 .card:hover{transform:translateY(-4px);border-color:var(--gold)}
 .card h3{font-size:20px;margin:14px 0 6px}
@@ -458,6 +465,11 @@ footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-s
     <div id="malla" class="malla">
       <noscript><p class="note">Activa JavaScript para ver la malla curricular clase por clase.</p></noscript>
     </div>
+    <a class="plat-cta reveal" href="recorrido/">
+      <span class="plat-ic" aria-hidden="true">📱</span>
+      <span class="plat-tx"><b>Mira tu plataforma de alumno</b><span>Recorre la cuenta que tendrás desde tu celular: tus 48 clases, tu cronograma de pagos y tu asistencia.</span></span>
+      <span class="plat-go">Ver recorrido ›</span>
+    </a>
     <div class="promo-wrap">
       <a class="promo-btn" href="https://wa.me/51936967506?text=%5BMATR%C3%8DCULA%20PROMO%20S%2F%2059%5D%20Hola%2C%20vi%20la%20p%C3%A1gina%20web%20y%20quiero%20separar%20mi%20vacante%20con%20la%20matr%C3%ADcula%20a%20S%2F%2059." target="_blank" rel="noopener">
         <span class="promo-tag">Solo por hoy</span>

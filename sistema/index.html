@@ -353,6 +353,27 @@ main{padding:18px 0 110px;overflow-x:hidden}
 .cal-sum b{display:block;font-family:var(--display);font-size:20px}
 .cal-sum span{font-size:11px;color:var(--muted)}
 .as-day{margin-top:16px;scroll-margin-top:76px}
+/* Recorrido para interesados */
+.rec-bar{display:flex;align-items:center;gap:10px;padding:8px 12px;background:linear-gradient(90deg,#3a2a0b,#21180a);border-bottom:1px solid #6b4f16}
+.rec-bar .rb-tx{flex:1;min-width:0;font-size:13px;line-height:1.25;color:var(--gold-soft)}
+.rec-bar .rb-tx b{display:block;color:var(--text);font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;font-size:13px;font-weight:600}
+.rec-bar .btn{min-height:40px;padding:0 14px;font-size:13px}
+.rec-bar .rb-tour{background:none;border:1px solid #6b4f16;color:var(--gold-soft);border-radius:999px;min-height:40px;padding:0 10px;font-size:12px;font-weight:600;white-space:nowrap}
+.tour-ov{position:fixed;inset:0;z-index:80;pointer-events:none}
+.tour-ov.on{pointer-events:auto}
+.tour-hole{position:fixed;border-radius:16px;box-shadow:0 0 0 9999px rgba(5,4,2,.78);outline:3px solid var(--gold);outline-offset:3px;transition:all .3s ease;pointer-events:none}
+.tour-card{position:fixed;left:12px;right:12px;max-width:460px;margin:0 auto;background:#1b160e;border:1px solid var(--gold);border-radius:20px;padding:16px 16px 14px;box-shadow:0 18px 50px rgba(0,0,0,.6);transition:top .3s ease,bottom .3s ease}
+.tour-card .tc-step{font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--gold)}
+.tour-card h3{font-size:20px;margin:4px 0 6px}
+.tour-card p{margin:0;color:var(--text);font-size:15px;line-height:1.45}
+.tour-card .tc-dots{display:flex;gap:5px;margin:12px 0 0}
+.tour-card .tc-dots i{width:7px;height:7px;border-radius:50%;background:var(--panel-3)}
+.tour-card .tc-dots i.on{background:var(--gold);width:18px;border-radius:9px}
+.tour-card .tc-btns{display:flex;gap:8px;margin-top:12px;align-items:center}
+.tour-card .tc-btns .btn{min-height:44px}
+.tour-card .tc-skip{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:13px;margin-right:auto;padding:0}
+.tour-card.center{top:50%;transform:translateY(-50%)}
+.tour-card .tc-big{font-size:40px;line-height:1;margin-bottom:6px}
 /* Clases del alumno (perfil) */
 .cl-list{margin-top:8px}
 .cl-row{display:grid;grid-template-columns:42px 1fr auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
@@ -696,8 +717,9 @@ const ICON = {
 const API_FIJA = (API_URL && API_URL.indexOf('__')!==0) ? API_URL : '';
 (function(){ try{ const u=new URL(location.href); const a=u.searchParams.get('api'); if(a && /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(a)){ localStorage.setItem('cfm_api', JSON.stringify(a)); u.searchParams.delete('api'); history.replaceState(null,'',u.pathname+u.search); } }catch(e){} })();
 const API_ACTIVA = API_FIJA || lsGet('cfm_api','');
-const DEMO = !API_ACTIVA;
-const DEMO_KEY = 'cfm_sistema_demo_v4';
+const MODO_RECORRIDO = 'no' === 'si';
+const DEMO = MODO_RECORRIDO || !API_ACTIVA;
+const DEMO_KEY = MODO_RECORRIDO ? 'cfm_recorrido_v1' : 'cfm_sistema_demo_v4';
 const API = {
   async call(accion, datos){
     const pin = S.pin;
@@ -754,7 +776,7 @@ function semilla(){
 
 /* =================== ESTADO =================== */
 const S = {
-  pin: lsGet('cfm_pin',''),
+  pin: MODO_RECORRIDO ? '' : lsGet('cfm_pin',''),
   data: null,
   vista: 'inicio',
   turno: null,
@@ -874,12 +896,14 @@ function render(){
   }
   const navSel = (S.vista==='turno'||S.vista==='guia') && dueno ? 'turnos' : S.vista;
   app.innerHTML = `
-    ${DEMO?`<div class="demo-bar">Modo demostración · datos de ejemplo guardados solo en este celular</div>`:''}
+    ${MODO_RECORRIDO?`<div class="rec-bar"><span class="rb-tx"><b>👀 Recorrido de ejemplo</b>Así se verá tu cuenta cuando te inscribas</span>
+        <button class="rb-tour" data-act="tour">▶ Ver guía</button></div>`
+      : DEMO?`<div class="demo-bar">Modo demostración · datos de ejemplo guardados solo en este celular</div>`:''}
     <header class="topbar"><div class="wrap">
       <img src="../img/logo.png" alt="">
       <div class="who"><small>${dueno?'Panel del director':alumno?'Mi cuenta de alumno':'Panel del educador'}</small><b>${dueno?'Director':esc(S.data.sesion.nombre)}</b></div>
       ${dueno?`<button class="icon-btn" data-act="ir" data-v="ajustes" aria-label="Ajustes">⚙️</button>`:''}
-      <button class="btn btn-ghost btn-sm" data-act="salir">Salir</button>
+      ${MODO_RECORRIDO?`<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="${linkInscripcion()}">Inscribirme</a>`:`<button class="btn btn-ghost btn-sm" data-act="salir">Salir</button>`}
     </div></header>
     <main><div class="wrap">${body}</div></main>
     <nav class="nav" aria-label="Menú"><div class="wrap">
@@ -1415,7 +1439,7 @@ function htmlClases(a, editable){ const cl = clasesAlumno(a), pasadas = cl.filte
       const fila = k => { const e = k.reg?.estado; return `<div class="cl-row ${k.fut?'fut':e||'sin'}">
           <span class="cl-n">${k.n}<small>clase</small></span>
           <span class="cl-tx"><b>${cap(fDia(k.f))} ${fCorta(k.f)}</b><span>${k.fut?(k.f===futuras[0]?.f?'Próxima clase':'Después'):e?EST[e].t+(k.reg.por?' · '+esc(quien(k.reg.por)):''):'Sin marcar'}${k.extra?' · recuperación':''}</span></span>
-          ${editable ? `<span class="cl-btns" role="group" aria-label="Asistencia del ${fCorta(k.f)}">${['A','T','F','J'].map(x=>`<button data-act="marcarUno" data-id="${a.id}" data-f="${k.f}" data-e="${x}" aria-pressed="${e===x}" aria-label="${EST[x].t}" title="${EST[x].t}" ${k.fut?'disabled':''}>${EST[x].ic}</button>`).join('')}</span>` : `<span class="badge ${k.fut?'':e==='A'?'b-ok':e==='T'?'b-warn':e==='F'?'b-bad':e==='J'?'b-info':'b-warn'}">${k.fut?'Próxima':e?EST[e].ic+' '+EST[e].t:'Sin marcar'}</span>`}
+          ${editable ? `<span class="cl-btns" role="group" aria-label="Asistencia del ${fCorta(k.f)}">${['A','T','F','J'].map(x=>`<button data-act="marcarUno" data-id="${a.id}" data-f="${k.f}" data-e="${x}" aria-pressed="${e===x}" aria-label="${EST[x].t}" title="${EST[x].t}" ${k.fut?'disabled':''}>${EST[x].ic}</button>`).join('')}</span>` : `<span class="badge ${k.fut?'':e==='A'?'b-ok':e==='T'?'b-warn':e==='F'?'b-bad':e==='J'?'b-info':'b-warn'}">${k.fut?(k.f===futuras[0]?.f?'Próxima':'Después'):e?EST[e].ic+' '+EST[e].t:'Sin marcar'}</span>`}
         </div>`; };
       return `<p class="crono-t" style="margin-top:14px">📅 ${editable?'Sus clases':'Tus clases'} desde que ${editable?'empezó':'empezaste'} (${fCorta(a.fechaInicio)})</p>
         ${sinMarcar&&editable?`<div class="notice warn" style="margin:6px 0">${sinMarcar} clase${sinMarcar>1?'s':''} sin marcar. Toca ✓ asistió, ⏱ tarde, ✕ faltó o J justificó.</div>`:''}
@@ -1611,7 +1635,7 @@ async function entrar(pin){
   app.innerHTML = `<div class="loading"><div><div class="spin"></div>Entrando…</div></div>`;
   try{
     S.data = await API.call('datos');
-    lsSet('cfm_pin', pin);
+    if(!MODO_RECORRIDO) lsSet('cfm_pin', pin);
     S.vista = esDueno() ? 'inicio' : esAlumno() ? 'mi' : 'turno'; S.tab = 'modulos'; S.turno = null; S.attFecha = null;
   }catch(e){ S.data=null; S.pin=''; lsSet('cfm_pin',''); render(); toast(e.message, true); return; }
   render();
@@ -1731,6 +1755,10 @@ document.addEventListener('click', async e=>{
     case 'editEdu': hojaEdu(id); break;
     case 'borrarEdu': if(confirmar('¿Eliminar a este educador? Ya no podrá entrar.') && await ejecutar('borrarEducador', { id }, 'Educador eliminado')){ cerrarHoja(); render(); } break;
     case 'verPin': S.verPin[id]=!S.verPin[id]; render(); break;
+    case 'tour': tourAbrir(0); break;
+    case 'tourSig': tourAbrir(tourI+1); break;
+    case 'tourAtras': tourAbrir(Math.max(0,tourI-1)); break;
+    case 'tourFin': tourCerrar(); window.scrollTo(0,0); break;
     case 'temMod': S.temMod = Number(b.dataset.m); render(); break;
     case 'verTemario': S.temMod = Number(b.dataset.m)||null; S.vista='temario'; window.scrollTo(0,0); render(); break;
     case 'verPinAl': S.verPinAl = S.verPinAl===id ? null : id; hojaPerfil(id); break;
@@ -1751,9 +1779,69 @@ document.addEventListener('click', async e=>{
 });
 function confirmar(m){ try{ return window.confirm(m); }catch(e){ return true; } }
 
+/* =================== RECORRIDO PARA INTERESADOS =================== */
+function linkInscripcion(){ return waLink(WA_ESCUELA, '[RECORRIDO - QUIERO INSCRIBIRME] Hola, vi el recorrido de la plataforma del alumno y quiero inscribirme en el curso de barbería. ¿Qué turnos tienen disponibles?'); }
+function semillaRecorrido(){
+  const H = hoy(), ini = (()=>{ let f = addD(H,-38); while(pISO(f).getDay()!==6) f = addD(f,-1); return f; })();
+  const db = { config:{ pinDueno:'__no__', mensualidad:197, matricula:59, cuotas:6, dias:28, meta:100 }, alumnos:[], asistencia:[], pagos:[], notas:[],
+    educadores:[{ id:'e1', nombre:'Tu educador', celular:'', pin:'__edu__', turnos:'SD-M', activo:true }] };
+  db.alumnos.push({ id:'yo', nombre:'Diego Ramírez', celular:'', turno:'SD-M', modulo:2, fechaInicio:ini, estado:'Activo', creado:ini, notas:'', mensualidad:'', matricula:'', pin:'777777' });
+  db.pagos.push({ id:'p0', fecha:ini, alumnoId:'yo', concepto:'Matrícula', monto:59, medio:'Yape', por:'Dirección', ts:'' });
+  db.pagos.push({ id:'p1', fecha:ini, alumnoId:'yo', concepto:'Mensualidad', monto:197, medio:'Yape', por:'Dirección', ts:'' });
+  db.pagos.push({ id:'p2', fecha:addD(ini,28), alumnoId:'yo', concepto:'Mensualidad', monto:197, medio:'Efectivo', por:'Dirección', ts:'' });
+  let f = ini, n = 0;
+  while(f <= H){ if(pISO(f).getDay()===6 || pISO(f).getDay()===0){ n++; db.asistencia.push({ id:'r'+n, fecha:f, turno:'SD-M', alumnoId:'yo', estado: n===4?'T':n===7?'F':'A', por:'Tu educador', ts:'' }); } f = addD(f,1); }
+  return db;
+}
+const TOUR = [
+  { v:'mi', sel:null, ic:'💈', t:'Bienvenido a tu plataforma', p:'Así vas a ver tu curso en Callao For Men desde tu celular, todos los días. Te lo muestro en 30 segundos.' },
+  { v:'mi', sel:'.t-hero', t:'Tu turno y tu avance', p:'Ves tu turno, tu educador, en qué módulo vas (de 6), tu porcentaje de asistencia y cuántas cuotas llevas pagadas.' },
+  { v:'mi', sel:'main .grid.g2', t:'Tu próxima clase y tu próximo pago', p:'Siempre sabes cuándo te toca clase y cuándo vence tu siguiente cuota. Sin sorpresas.' },
+  { v:'temario', sel:'.g-mods', t:'Tus 6 módulos y 48 clases', p:'Un módulo por mes, 8 clases de 3 horas cada uno. Toca cualquier módulo para ver qué vas a aprender en cada clase y qué debes traer.' },
+  { v:'temario', sel:'.g-list', t:'Clase por clase', p:'Desde los fundamentos y el afeitado hasta degradados, diseños, freestyle y el examen final con certificado.' },
+  { v:'mispagos', sel:'.price-card', t:'Tu cronograma de pagos', p:'Matrícula S/ 59 y mensualidad S/ 197 cada 28 días. Ves cada cuota con su fecha, cuánto pagaste y cuánto te falta.' },
+  { v:'misclases', sel:'.cl-list', t:'Tu asistencia', p:'Tu educador marca cada clase. Tú ves si asististe, llegaste tarde o faltaste, y tu porcentaje.' },
+  { v:'mi', sel:null, ic:'✂️', t:'¿Listo para empezar?', p:'Separa tu vacante hoy. Escríbenos y te decimos los turnos disponibles: mañana, tarde o fin de semana.', fin:true }
+];
+let tourI = -1;
+function tourAbrir(i){
+  tourI = i; const st = TOUR[i]; if(!st) return tourCerrar();
+  if(S.vista !== st.v){ S.vista = st.v; if(st.v==='temario') S.temMod = null; render(); }
+  let ov = $('#tour'); if(!ov){ ov = document.createElement('div'); ov.id='tour'; ov.className='tour-ov'; document.body.appendChild(ov); }
+  ov.className = 'tour-ov on';
+  const el = st.sel ? $(st.sel) : null;
+  const dots = TOUR.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('');
+  const btns = st.fin
+    ? `<button class="tc-skip" data-act="tourFin">Seguir mirando</button><a class="btn btn-wa" target="_blank" rel="noopener" href="${linkInscripcion()}" data-act="tourFin">Quiero inscribirme</a>`
+    : `<button class="tc-skip" data-act="tourFin">${i===0?'Ver por mi cuenta':'Saltar'}</button>${i>0?`<button class="btn btn-ghost" data-act="tourAtras">Atrás</button>`:''}<button class="btn btn-gold" data-act="tourSig">${i===0?'Empezar':'Siguiente'}</button>`;
+  ov.innerHTML = `<div class="tour-hole" style="${el?'':'display:none'}"></div>
+    <div class="tour-card ${el?'':'center'}" role="dialog" aria-modal="true" aria-label="${esc(st.t)}">
+      ${st.ic?`<div class="tc-big">${st.ic}</div>`:''}
+      ${el?`<div class="tc-step">Paso ${i} de ${TOUR.length-2}</div>`:''}
+      <h3>${esc(st.t)}</h3><p>${esc(st.p)}</p>
+      <div class="tc-dots">${dots}</div>
+      <div class="tc-btns">${btns}</div>
+    </div>`;
+  if(!el){ ov.style.background='rgba(5,4,2,.8)'; return; }
+  ov.style.background='transparent';
+  el.scrollIntoView({ block:'center' });
+  requestAnimationFrame(()=>setTimeout(()=>{
+    const r = el.getBoundingClientRect(), hole = ov.querySelector('.tour-hole'), card = ov.querySelector('.tour-card');
+    const pad = 6, vh = innerHeight;
+    const top = Math.max(8, r.top - pad), h = Math.min(r.height + pad*2, vh - 200);
+    Object.assign(hole.style, { left:(r.left-pad)+'px', top:top+'px', width:(r.width+pad*2)+'px', height:h+'px' });
+    const espacioAbajo = vh - (top + h);
+    if(espacioAbajo > card.offsetHeight + 24){ card.style.top = (top + h + 14)+'px'; card.style.bottom='auto'; }
+    else if(top > card.offsetHeight + 24){ card.style.top = 'auto'; card.style.bottom = (vh - top + 14)+'px'; }
+    else { card.style.top='auto'; card.style.bottom='14px'; }
+  }, 60));
+}
+function tourCerrar(){ tourI = -1; const ov = $('#tour'); if(ov){ ov.className='tour-ov'; ov.innerHTML=''; ov.style.background='transparent'; } }
+addEventListener('resize', ()=>{ if(tourI>=0) tourAbrir(tourI); });
+
 /* =================== AUTO-ACTUALIZACIÓN =================== */
 /* Si el celular tiene guardada una versión vieja de la página, se recarga sola con la nueva. */
-const VERSION_APP = '20261107131647';
+const VERSION_APP = '20261107132739';
 (function(){
   try{
     fetch(location.pathname + '?_=' + Date.now(), { cache:'no-store' }).then(r=>r.text()).then(t=>{
@@ -1767,7 +1855,8 @@ const VERSION_APP = '20261107131647';
 })();
 
 /* =================== INICIO =================== */
-if(S.pin) entrar(S.pin); else render();
+if(MODO_RECORRIDO){ lsSet(DEMO_KEY, semillaRecorrido()); S.pin = '777777'; entrar(S.pin).then(()=>setTimeout(()=>tourAbrir(0), 500)); }
+else if(S.pin) entrar(S.pin); else render();
 </script>
 </body>
 </html>
