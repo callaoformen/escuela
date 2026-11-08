@@ -85,6 +85,31 @@ h2 .g{color:var(--gold)}
 .fila .c.si b{color:var(--ok)}
 .nota{font-size:12px;color:var(--muted);margin-top:8px}
 
+/* Botón flotante: cambia su mensaje según la parte de la página que se está viendo */
+var CTA = [
+  ['Solo por hoy', 'Separa tu cupo con S/ 59', 'Hola, vi la página de precios y quiero separar mi cupo hoy con la matrícula de S/ 59. ¿Qué turnos tienen disponibles?'],
+  ['Matrícula S/ 59 · antes S/ 100', 'Reservar mi cupo ahora', 'Hola, vi los precios y quiero reservar mi cupo ahora con la matrícula de S/ 59. ¿Qué turnos tienen disponibles?'],
+  ['Empieza a ganar cortando', 'Reservar mi cupo ahora', 'Hola, quiero empezar a ganar como barbero. Quiero reservar mi cupo con la matrícula de S/ 59.'],
+  ['Desde tu primer mes', 'Obtén tu polo y tu cupo', 'Hola, quiero separar mi cupo con la matrícula de S/ 59 y obtener mi polo de Callao For Men.'],
+  ['¿Te quedó una duda? Escríbenos', 'Separar mi cupo', 'Hola, tengo una duda sobre el curso de barbería y quiero separar mi cupo con la matrícula de S/ 59.'],
+  ['Los cupos vuelan', 'Separar mi cupo ahora', 'Hola, quiero separar mi cupo ahora con la matrícula de S/ 59. ¿Qué turnos tienen disponibles?']
+];
+var btnF = document.getElementById('ctaFija'), ctaAct = 0;
+function ponCTA(k){
+  if(k===ctaAct) return; ctaAct = k;
+  document.getElementById('ctaSm').textContent = CTA[k][0];
+  document.getElementById('ctaBg').textContent = CTA[k][1];
+  btnF.href = wa('PRECIOS - SEPARAR MI CUPO S/ 59', CTA[k][2]);
+  btnF.classList.remove('cambia','late'); void btnF.offsetWidth; btnF.classList.add('cambia','late');
+}
+if('IntersectionObserver' in window){
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting) ponCTA(+e.target.getAttribute('data-cta')); });
+  }, { rootMargin: '-45% 0px -45% 0px' });
+  document.querySelectorAll('[data-cta]').forEach(function(el){ io.observe(el); });
+}
+setInterval(function(){ btnF.classList.remove('late'); void btnF.offsetWidth; btnF.classList.add('late'); }, 7000);
+
 /* Calculadora */
 .calc{margin-top:18px;background:linear-gradient(160deg,rgba(227,167,47,.14),var(--panel) 60%);border:1px solid var(--gold);border-radius:22px;padding:18px}
 .slider{margin-top:14px}
@@ -143,11 +168,21 @@ footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
 .fija{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(11,10,8,.98) 70%,rgba(11,10,8,0));display:flex;gap:8px;justify-content:center}
 .fija .btn{flex:1;max-width:540px;min-height:54px;font-size:16px;box-shadow:0 10px 26px rgba(0,0,0,.5)}
 .btn-fija span{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1}
+.btn-fija{position:relative;overflow:hidden;justify-content:flex-start;padding:0 18px}
+.btn-fija b{font-weight:600}
+.btn-fija .flecha{margin-left:auto;font-style:normal;font-size:30px;line-height:1;animation:flecha 1.2s ease-in-out infinite}
+@keyframes flecha{50%{transform:translateX(5px)}}
+.btn-fija::after{content:"";position:absolute;top:0;bottom:0;left:-40%;width:30%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);animation:brillo 3.2s ease-in-out infinite}
+@keyframes brillo{0%,55%{left:-40%}100%{left:130%}}
+.btn-fija.cambia #ctaTx{animation:entra .35s ease}
+@keyframes entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.btn-fija.late{animation:late .6s ease}
+@keyframes late{30%{transform:scale(1.05)}60%{transform:scale(.98)}}
 .btn-fija small{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.08em;opacity:.8}
 .fija .precio{display:flex;flex-direction:column;justify-content:center;align-items:center;flex:0 0 auto;background:#1b160e;border:1px solid var(--gold);border-radius:16px;padding:0 12px;line-height:1.1}
 .fija .precio small{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .fija .precio b{font-family:var(--display);font-size:20px;color:var(--gold-soft)}
-@media (prefers-reduced-motion:reduce){.urg i{animation:none}html{scroll-behavior:auto}}
+@media (prefers-reduced-motion:reduce){.urg i,.btn-fija::after,.btn-fija .flecha,.btn-fija.late,.btn-fija.cambia #ctaTx{animation:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -163,7 +198,7 @@ footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
 <main class="wrap">
 
   <!-- 1. COMPARACIÓN -->
-  <section aria-labelledby="s2">
+  <section aria-labelledby="s2" data-cta="0">
     <p class="kicker">Compara antes de decidir</p>
     <h2 id="s2">Lo que otras no te dan, <span class="g">aquí sí</span></h2>
     <p class="lead">Antes de inscribirte en cualquier academia, pregunta por estas 7 cosas. Así se compara Callao For Men.</p>
@@ -202,7 +237,7 @@ footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
   </section>
 
   <!-- 2. PRECIO -->
-  <section aria-labelledby="s1">
+  <section aria-labelledby="s1" data-cta="1">
     <p class="kicker">Tu inversión</p>
     <h2 id="s1">¿Y cuánto <span class="g">cuesta</span>?</h2>
     <div class="precios">
@@ -233,7 +268,7 @@ footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
   </section>
 
   <!-- 3. CALCULADORA -->
-  <section aria-labelledby="s3">
+  <section aria-labelledby="s3" data-cta="2">
     <p class="kicker">Haz tus números</p>
     <h2 id="s3">¿En cuánto <span class="g">recuperas</span> tu inversión?</h2>
     <p class="lead">Mueve las barras con lo que cobrarías cuando ya cortes. Es solo un ejemplo: lo que ganes depende de ti.</p>
@@ -254,7 +289,7 @@ footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
   </section>
 
   <!-- 4. INCLUYE -->
-  <section aria-labelledby="s4">
+  <section aria-labelledby="s4" data-cta="3">
     <p class="kicker">Todo esto incluye</p>
     <h2 id="s4">Lo que te llevas en <span class="g">6 meses</span></h2>
     <div class="incl">
@@ -268,18 +303,19 @@ footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
   </section>
 
   <!-- 5. PREGUNTAS -->
-  <section aria-labelledby="s5">
+  <section aria-labelledby="s5" data-cta="4">
     <p class="kicker">Dudas de precio</p>
     <h2 id="s5">Preguntas <span class="g">frecuentes</span></h2>
     <details class="q"><summary>¿Tengo que pagar todo el curso junto?</summary><p>No. Pagas S/ 59 de matrícula para separar tu vacante y luego S/ 197 cada 28 días, durante 6 meses.</p></details>
     <details class="q"><summary>¿Cuándo pago la primera mensualidad?</summary><p>Al empezar tus clases. Desde esa fecha, cada cuota vence cada 28 días y la ves en tu plataforma de alumno.</p></details>
     <details class="q"><summary>¿Cómo puedo pagar?</summary><p>Con Yape, Plin, transferencia o en efectivo en la escuela.</p></details>
     <details class="q"><summary>¿Hasta cuándo está la matrícula a S/ 59?</summary><p>Es un precio de lanzamiento por estas fechas. Si separas tu vacante ahora, la mantienes aunque el precio vuelva a S/ 100.</p></details>
+    <details class="q"><summary>Soy menor de edad, ¿puedo inscribirme?</summary><p>Sí, desde los 12 años, con autorización de tus padres o apoderado. Al inscribirte, uno de ellos nos da su autorización.</p></details>
     <details class="q"><summary>Nunca he cortado, ¿puedo inscribirme?</summary><p>Sí. El curso empieza desde cero, para hombres y mujeres, y practicas desde la primera semana.</p></details>
   </section>
 
   <!-- 6. CIERRE -->
-  <section class="cierre" aria-labelledby="s6">
+  <section class="cierre" aria-labelledby="s6" data-cta="5">
     <p class="kicker" style="justify-content:center">Separa tu vacante hoy</p>
     <h2 id="s6">Empieza con <span class="g">S/ 59</span></h2>
     <p class="lead" style="max-width:36ch;margin:8px auto 0">Elige tu grupo. Los cupos se separan por orden de llegada.</p>
@@ -295,7 +331,7 @@ footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
 <div class="fija">
   <a class="btn btn-wa btn-fija" id="ctaFija" target="_blank" rel="noopener" href="#">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/></svg>
-    <span><small>Solo por hoy</small>Separa tu cupo con S/ 59</span></a>
+    <span id="ctaTx"><small id="ctaSm">Solo por hoy</small><b id="ctaBg">Separa tu cupo con S/ 59</b></span><em class="flecha" aria-hidden="true">›</em></a>
 </div>
 
 <script>
@@ -324,6 +360,31 @@ document.getElementById('inicios').innerHTML = vigentes.map(function(x){
 }).join('');
 if(!vigentes.length) document.getElementById('inicios').innerHTML = '<p class="lead">Pregúntanos por los próximos grupos.</p>';
 if(vigentes.length){ var n0 = Math.round((pISO(vigentes[0].f)-hoy)/864e5); document.querySelector('#urg span').textContent = 'Matrícula a S/ 59 · próximo grupo '+(n0===0?'empieza hoy':n0===1?'empieza mañana':'en '+n0+' días'); }
+
+/* Botón flotante: cambia su mensaje según la parte de la página que se está viendo */
+var CTA = [
+  ['Solo por hoy', 'Separa tu cupo con S/ 59', 'Hola, vi la página de precios y quiero separar mi cupo hoy con la matrícula de S/ 59. ¿Qué turnos tienen disponibles?'],
+  ['Matrícula S/ 59 · antes S/ 100', 'Reservar mi cupo ahora', 'Hola, vi los precios y quiero reservar mi cupo ahora con la matrícula de S/ 59. ¿Qué turnos tienen disponibles?'],
+  ['Empieza a ganar cortando', 'Reservar mi cupo ahora', 'Hola, quiero empezar a ganar como barbero. Quiero reservar mi cupo con la matrícula de S/ 59.'],
+  ['Desde tu primer mes', 'Obtén tu polo y tu cupo', 'Hola, quiero separar mi cupo con la matrícula de S/ 59 y obtener mi polo de Callao For Men.'],
+  ['¿Te quedó una duda? Escríbenos', 'Separar mi cupo', 'Hola, tengo una duda sobre el curso de barbería y quiero separar mi cupo con la matrícula de S/ 59.'],
+  ['Los cupos vuelan', 'Separar mi cupo ahora', 'Hola, quiero separar mi cupo ahora con la matrícula de S/ 59. ¿Qué turnos tienen disponibles?']
+];
+var btnF = document.getElementById('ctaFija'), ctaAct = 0;
+function ponCTA(k){
+  if(k===ctaAct) return; ctaAct = k;
+  document.getElementById('ctaSm').textContent = CTA[k][0];
+  document.getElementById('ctaBg').textContent = CTA[k][1];
+  btnF.href = wa('PRECIOS - SEPARAR MI CUPO S/ 59', CTA[k][2]);
+  btnF.classList.remove('cambia','late'); void btnF.offsetWidth; btnF.classList.add('cambia','late');
+}
+if('IntersectionObserver' in window){
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting) ponCTA(+e.target.getAttribute('data-cta')); });
+  }, { rootMargin: '-45% 0px -45% 0px' });
+  document.querySelectorAll('[data-cta]').forEach(function(el){ io.observe(el); });
+}
+setInterval(function(){ btnF.classList.remove('late'); void btnF.offsetWidth; btnF.classList.add('late'); }, 7000);
 
 /* Calculadora */
 function soles(n){ return 'S/ '+Math.round(n).toLocaleString('es-PE'); }
