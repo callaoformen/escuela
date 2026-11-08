@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Recorrido: tu plataforma de alumno · Callao For Men</title>
+<title>Recorrido: tu plataforma de alumno · Escuela de Barbería en Piura</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0b0a08">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta property="og:title" content="Mira tu plataforma de alumno · Escuela Callao For Men">
+<meta property="og:title" content="Mira tu plataforma de alumno · Escuela de barbería en Piura · Callao For Men">
 <meta property="og:description" content="Recorre la cuenta que tendrás como alumno: tus 48 clases, tu cronograma de pagos y tu asistencia, desde tu celular.">
 <meta name="description" content="Recorrido de la plataforma del alumno de la Escuela de Barbería Callao For Men en Piura.">
 <meta property="og:image" content="https://callaoformen.github.io/escuela/img/og.jpg">
@@ -431,6 +431,22 @@ main{padding:18px 0 110px;overflow-x:hidden}
 .g-evalm{margin-top:12px;border:1px dashed var(--mc);border-radius:14px;padding:12px 14px}
 .g-evalm b{color:var(--mc);font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-weight:500}
 .g-evalm p{margin:4px 0 0;font-size:14px}
+
+/* === Escuela de barbería en Piura (identidad visible en todas las páginas) === */
+.pz-top{display:flex;align-items:center;justify-content:center;gap:6px 10px;flex-wrap:wrap;background:linear-gradient(90deg,#e3a72f,#f3cf7a 50%,#e3a72f);color:#1a1205;font-family:"Oswald","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:13px;font-weight:600;padding:8px 12px;text-align:center;line-height:1.2;position:relative;z-index:5}
+.pz-top b{font-weight:700;font-size:14px}
+.pz-top span{opacity:.8}
+.pz-mid{display:flex;gap:12px;align-items:center;margin:30px 0 0;padding:14px 16px;border-radius:20px;border:1px solid #e3a72f;background:linear-gradient(135deg,rgba(227,167,47,.18),rgba(23,20,14,.92));color:#f6f1e8;text-align:left;font-family:"Barlow","Helvetica Neue",Arial,sans-serif}
+.pz-mid .pz-pin{font-size:30px;line-height:1;flex:0 0 auto}
+.pz-mid .pz-tx{flex:1;min-width:0}
+.pz-mid .pz-tx b{display:block;font-family:"Oswald","Arial Narrow",Impact,sans-serif;text-transform:uppercase;font-size:18px;letter-spacing:.02em;color:#f3cf7a;line-height:1.15}
+.pz-mid .pz-tx span{font-size:14px;color:#d8cdb9;display:block;margin-top:3px;line-height:1.35}
+.pz-mid a{flex:0 0 auto;white-space:nowrap;font-weight:700;color:#1a1205;background:#f3cf7a;border-radius:999px;padding:8px 12px;font-size:13px;text-decoration:none}
+.pz-mid .pz-pin{width:34px;text-align:center}
+@media(max-width:560px){.pz-mid{flex-wrap:wrap;align-items:flex-start}.pz-mid .pz-tx{flex:1 1 calc(100% - 52px)}.pz-mid a{margin-left:46px}}
+.pz-box{max-width:1100px;margin:0 auto;padding:0 20px}
+.pz-end{text-align:center;padding:20px 16px 6px;margin-top:26px;border-top:1px solid #3a3020;color:#bdb29f;font-size:14px;line-height:1.4;font-family:"Barlow","Helvetica Neue",Arial,sans-serif}
+.pz-end b{color:#f3cf7a;display:block;font-family:"Oswald","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:17px;margin-bottom:2px}
 </style>
 </head>
 <body>
@@ -900,13 +916,14 @@ function render(){
     ${MODO_RECORRIDO?`<div class="rec-bar"><span class="rb-tx"><b>👀 Recorrido de ejemplo</b>Así se verá tu cuenta cuando te inscribas</span>
         <button class="rb-tour" data-act="tour">▶ Ver guía</button></div>`
       : DEMO?`<div class="demo-bar">Modo demostración · datos de ejemplo guardados solo en este celular</div>`:''}
+    <div class="pz-top" role="note">📍 <b>Escuela de barbería en Piura</b><span>Castilla · Piura · Perú</span></div>
     <header class="topbar"><div class="wrap">
       <img src="../img/logo.png" alt="">
       <div class="who"><small>${dueno?'Panel del director':alumno?'Mi cuenta de alumno':'Panel del educador'}</small><b>${dueno?'Director':esc(S.data.sesion.nombre)}</b></div>
       ${dueno?`<button class="icon-btn" data-act="ir" data-v="ajustes" aria-label="Ajustes">⚙️</button>`:''}
       ${MODO_RECORRIDO?`<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="${linkInscripcion()}">Inscribirme</a>`:`<button class="btn btn-ghost btn-sm" data-act="salir">Salir</button>`}
     </div></header>
-    <main><div class="wrap">${body}</div></main>
+    <main><div class="wrap">${body}<div class="pz-end"><b>Callao For Men · Escuela de barbería en Piura</b>Castilla, Piura – Perú · WhatsApp 936 967 506</div></div></main>
     <nav class="nav" aria-label="Menú"><div class="wrap">
       ${navItems.map(([v,l,ic])=>`<button data-act="ir" data-v="${v}" ${navSel===v?'aria-current="page"':''}>${ICON[ic]}<span>${l}</span></button>`).join('')}
     </div></nav>`;
@@ -996,8 +1013,9 @@ function vMisClases(){
 
 /* ---------- Login ---------- */
 function vLogin(){
-  return `<div class="login"><form class="login-card" id="loginForm" autocomplete="off">
+  return `<div class="pz-top" role="note">📍 <b>Escuela de barbería en Piura</b><span>Castilla · Piura · Perú</span></div><div class="login"><form class="login-card" id="loginForm" autocomplete="off">
     <img src="../img/logo.png" alt="Escudo Callao For Men">
+    <p style="color:var(--gold);font-family:var(--display,inherit);text-transform:uppercase;letter-spacing:.12em;font-size:13px;margin:0 0 6px">📍 Escuela de barbería en Piura</p>
     <h1>Sistema <span>Callao For Men</span></h1>
     <p>Escribe tu PIN para entrar</p>
     <label for="pin" style="position:absolute;left:-9999px">PIN</label>
@@ -1009,7 +1027,7 @@ function vLogin(){
       <div class="role" style="grid-column:1/-1"><b>Alumno</b><span>Ve sus clases, su cronograma de pagos y sus asistencias.</span></div>
     </div>
     ${DEMO?`<div class="demo-note"><b>Prueba ahora:</b> PIN <b>1234</b> para entrar como dueño · PIN <b>1111</b> para entrar como educador del turno lunes y miércoles · PIN <b>123456</b> para entrar como alumno.<br><a href="instalar.html" style="color:var(--gold-soft)">¿Listo para usarlo de verdad? Conéctalo con Google ›</a></div>`:''}
-  </form></div>`;
+  <div class="pz-end" style="max-width:400px;margin-left:auto;margin-right:auto"><b>Callao For Men · Escuela de barbería en Piura</b>Castilla, Piura – Perú · WhatsApp 936 967 506</div></form></div>`;
 }
 
 /* ---------- Inicio (dueño) ---------- */
