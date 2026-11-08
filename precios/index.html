@@ -37,7 +37,7 @@ h2 .g{color:var(--gold)}
 .lead{color:var(--muted);margin:8px 0 0}
 
 /* Portada */
-.top{text-align:center;padding:24px 0 0}
+.top{text-align:center;padding:24px 18px 0}
 .top img{width:110px;height:auto;display:block;margin:0 auto 8px;filter:drop-shadow(0 8px 20px rgba(0,0,0,.5))}
 .top h1{font-size:clamp(34px,9.5vw,56px)}
 .top h1 span{color:var(--gold)}
@@ -48,7 +48,7 @@ h2 .g{color:var(--gold)}
 
 /* Precios */
 .precios{display:grid;gap:12px;margin-top:20px}
-@media(min-width:720px){.precios{grid-template-columns:1fr 1fr 1fr}}
+@media(min-width:720px){.precios{grid-template-columns:1fr 1fr}}
 .pc{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px;text-align:center;position:relative}
 .pc.star{background:linear-gradient(160deg,#f3cf7a,#e3a72f);color:#1a1205;border:0;box-shadow:0 14px 40px rgba(227,167,47,.25)}
 .pc .lab{font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;font-size:13px;opacity:.85}
@@ -142,6 +142,8 @@ footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
 /* Barra fija */
 .fija{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(11,10,8,.98) 70%,rgba(11,10,8,0));display:flex;gap:8px;justify-content:center}
 .fija .btn{flex:1;max-width:540px;min-height:54px;font-size:16px;box-shadow:0 10px 26px rgba(0,0,0,.5)}
+.btn-fija span{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1}
+.btn-fija small{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.08em;opacity:.8}
 .fija .precio{display:flex;flex-direction:column;justify-content:center;align-items:center;flex:0 0 auto;background:#1b160e;border:1px solid var(--gold);border-radius:16px;padding:0 12px;line-height:1.1}
 .fija .precio small{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .fija .precio b{font-family:var(--display);font-size:20px;color:var(--gold-soft)}
@@ -153,52 +155,17 @@ footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
 <header class="top wrap">
   <img src="../img/escudo.png" alt="Escuela de Barbería Callao For Men" width="110" height="97">
   <p class="kicker">Escuela de barbería · Castilla, Piura</p>
-  <h1>Precios <span>claros</span>, sin sorpresas</h1>
-  <p>Cuánto cuesta convertirte en barbero o lady barber, qué incluye y en cuánto lo recuperas.</p>
+  <h1>¿Por qué <span>Callao For Men</span> y no otra academia?</h1>
+  <p>Compara lo que recibes, mira cuánto inviertes y en cuánto lo recuperas.</p>
   <div class="urg" id="urg"><i aria-hidden="true"></i><span>Matrícula a S/ 59 solo por estas fechas</span></div>
 </header>
 
 <main class="wrap">
 
-  <!-- 1. PRECIO -->
-  <section aria-labelledby="s1">
-    <p class="kicker">Tu inversión</p>
-    <h2 id="s1">Esto es <span class="g">todo</span> lo que pagas</h2>
-    <div class="precios">
-      <div class="pc star"><span class="tag">Precio de lanzamiento</span>
-        <div class="lab">Matrícula</div>
-        <div class="val num">S/ 59</div>
-        <div class="old">Antes <s>S/ 100</s> · ahorras S/ 41</div>
-        <div class="sub">Un solo pago para separar tu vacante</div></div>
-      <div class="pc">
-        <div class="lab" style="color:var(--gold)">Mensualidad</div>
-        <div class="val num">S/ 197</div>
-        <div class="sub" style="color:var(--muted)">Cada 28 días · 6 cuotas</div></div>
-      <div class="pc">
-        <div class="lab" style="color:var(--gold)">Curso completo</div>
-        <div class="val num" style="font-size:44px">S/ 1,241</div>
-        <div class="sub" style="color:var(--muted)">Matrícula + 6 mensualidades · pagas mes a mes</div></div>
-    </div>
-    <div class="desg">
-      <div><b class="num">S/ 7</b><span>al día, aprox.</span></div>
-      <div><b class="num">S/ 24.60</b><span>por clase de 3 horas</span></div>
-      <div><b class="num">S/ 8.20</b><span>por hora de práctica</span></div>
-    </div>
-    <div class="plan">
-      <h3>Así pagas, sin pagar todo de golpe</h3>
-      <div class="plan-row">
-        <div><i>S/ 59</i>Matrícula</div>
-        <div><i>197</i>Mes 1</div><div><i>197</i>Mes 2</div><div><i>197</i>Mes 3</div>
-        <div><i>197</i>Mes 4</div><div><i>197</i>Mes 5</div><div><i>197</i>Mes 6</div>
-      </div>
-      <p class="nota">Puedes pagar con Yape, Plin, transferencia o en efectivo. En tu plataforma de alumno ves la fecha de cada cuota.</p>
-    </div>
-  </section>
-
-  <!-- 2. COMPARACIÓN -->
+  <!-- 1. COMPARACIÓN -->
   <section aria-labelledby="s2">
     <p class="kicker">Compara antes de decidir</p>
-    <h2 id="s2">Lo que <span class="g">sí</span> te damos</h2>
+    <h2 id="s2">Lo que otras no te dan, <span class="g">aquí sí</span></h2>
     <p class="lead">Antes de inscribirte en cualquier academia, pregunta por estas 7 cosas. Así se compara Callao For Men.</p>
     <div class="vs">
       <div class="vs-h"><div class="otros">Lo que suele pasar en muchas academias</div><div class="cfm">En Callao For Men</div></div>
@@ -234,11 +201,42 @@ footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
     <p class="nota">Comparación general con lo que encontramos al consultar academias de barbería en Piura. Cada academia es distinta: pregunta siempre antes de pagar.</p>
   </section>
 
+  <!-- 2. PRECIO -->
+  <section aria-labelledby="s1">
+    <p class="kicker">Tu inversión</p>
+    <h2 id="s1">¿Y cuánto <span class="g">cuesta</span>?</h2>
+    <div class="precios">
+      <div class="pc star"><span class="tag">Precio de lanzamiento</span>
+        <div class="lab">Matrícula</div>
+        <div class="val num">S/ 59</div>
+        <div class="old">Antes <s>S/ 100</s> · ahorras S/ 41</div>
+        <div class="sub">Un solo pago para separar tu vacante</div></div>
+      <div class="pc">
+        <div class="lab" style="color:var(--gold)">Mensualidad</div>
+        <div class="val num">S/ 197</div>
+        <div class="sub" style="color:var(--muted)">Cada 28 días, hasta los 6 meses</div></div>
+    </div>
+    <div class="desg">
+      <div><b class="num">S/ 7</b><span>al día, aprox.</span></div>
+      <div><b class="num">S/ 24.60</b><span>por clase de 3 horas</span></div>
+      <div><b class="num">S/ 8.20</b><span>por hora de práctica</span></div>
+    </div>
+    <div class="plan">
+      <h3>Así pagas, sin pagar todo de golpe</h3>
+      <div class="plan-row">
+        <div><i>S/ 59</i>Matrícula</div>
+        <div><i>197</i>Mes 1</div><div><i>197</i>Mes 2</div><div><i>197</i>Mes 3</div>
+        <div><i>197</i>Mes 4</div><div><i>197</i>Mes 5</div><div><i>197</i>Mes 6</div>
+      </div>
+      <p class="nota">Puedes pagar con Yape, Plin, transferencia o en efectivo. En tu plataforma de alumno ves la fecha de cada cuota.</p>
+    </div>
+  </section>
+
   <!-- 3. CALCULADORA -->
   <section aria-labelledby="s3">
     <p class="kicker">Haz tus números</p>
     <h2 id="s3">¿En cuánto <span class="g">recuperas</span> tu inversión?</h2>
-    <p class="lead">Mueve las barras con lo que cobrarías cuando ya cortes. Es un ejemplo: lo que ganes depende de ti.</p>
+    <p class="lead">Mueve las barras con lo que cobrarías cuando ya cortes. Es solo un ejemplo: lo que ganes depende de ti.</p>
     <div class="calc">
       <div class="slider"><label for="pc">Cobro por corte <b class="num" id="pcV">S/ 15</b></label>
         <input type="range" id="pc" min="8" max="40" step="1" value="15"></div>
@@ -249,9 +247,9 @@ footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
       <div class="res">
         <div><b class="num" id="rSem">S/ 450</b><span>a la semana</span></div>
         <div><b class="num" id="rMes">S/ 1,950</b><span>al mes</span></div>
-        <div class="big"><b class="num" id="rDias">14 días</b><span id="rTxt">de trabajo para recuperar todo el curso (S/ 1,241)</span></div>
+        <div class="big"><b class="num" id="rDias">14 días</b><span id="rTxt">de trabajo para pagar tu mensualidad de S/ 197</span></div>
       </div>
-      <div class="barra"><div class="t"><span>Lo que inviertes: S/ 1,241</span><span id="rVeces">1.6× en un mes</span></div><div class="track"><i id="rBar" style="width:60%"></i></div></div>
+      <div class="barra"><div class="t"><span>Tu mensualidad: S/ 197</span><span id="rVeces"></span></div><div class="track"><i id="rBar" style="width:60%"></i></div></div>
     </div>
   </section>
 
@@ -295,15 +293,15 @@ footer{color:var(--muted);font-size:13px;text-align:center;margin:30px 0 0}
 </main>
 
 <div class="fija">
-  <div class="precio"><small>Matrícula</small><b class="num">S/ 59</b></div>
-  <a class="btn btn-wa" id="ctaFija" target="_blank" rel="noopener" href="#">
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/></svg>Separar mi vacante</a>
+  <a class="btn btn-wa btn-fija" id="ctaFija" target="_blank" rel="noopener" href="#">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/></svg>
+    <span><small>Solo por hoy</small>Separa tu cupo con S/ 59</span></a>
 </div>
 
 <script>
-var WA = '51936967506', CURSO = 1241;
+var WA = '51936967506', MENS = 197;
 function wa(tag, msg){ return 'https://wa.me/'+WA+'?text='+encodeURIComponent('['+tag+'] '+msg); }
-var linkInscribir = wa('PRECIOS - QUIERO INSCRIBIRME', 'Hola, vi la página de precios y quiero inscribirme en el curso de barbería con la matrícula a S/ 59. ¿Qué turnos tienen disponibles?');
+var linkInscribir = wa('PRECIOS - SEPARAR MI CUPO S/ 59', 'Hola, vi la página de precios y quiero separar mi cupo hoy con la matrícula de S/ 59. ¿Qué turnos tienen disponibles?');
 document.getElementById('ctaFinal').href = linkInscribir;
 document.getElementById('ctaFija').href = linkInscribir;
 
@@ -335,14 +333,14 @@ function calc(){
   document.getElementById('cdV').textContent = cd;
   document.getElementById('dtV').textContent = dt;
   var dia = pc*cd, sem = dia*dt, mes = sem*52/12;
-  var diasRec = Math.ceil(CURSO/dia);
+  var diasRec = Math.ceil(MENS/dia);
   document.getElementById('rSem').textContent = soles(sem);
   document.getElementById('rMes').textContent = soles(mes);
   document.getElementById('rDias').textContent = diasRec+' día'+(diasRec===1?'':'s');
-  document.getElementById('rTxt').textContent = 'de trabajo para recuperar todo el curso (S/ 1,241)'+(diasRec>dt*4?'':' · menos de un mes');
-  var veces = mes/CURSO;
-  document.getElementById('rVeces').textContent = (veces>=1? veces.toFixed(1).replace('.',',')+'× en un mes' : Math.round(veces*100)+'% en un mes');
-  document.getElementById('rBar').style.width = Math.min(100, veces*100/3*1)+'%';
+  document.getElementById('rTxt').textContent = 'de trabajo para pagar tu mensualidad de S/ 197';
+  var veces = mes/MENS;
+  document.getElementById('rVeces').textContent = 'En un mes ganas '+(veces>=1? Math.floor(veces*10)/10+'' : '0.'+Math.round(veces*10)).replace('.',',')+' veces tu mensualidad';
+  document.getElementById('rBar').style.width = Math.min(100, veces*10)+'%';
 }
 ['pc','cd','dt'].forEach(function(id){ document.getElementById(id).addEventListener('input', calc); });
 calc();
