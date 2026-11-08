@@ -85,31 +85,6 @@ h2 .g{color:var(--gold)}
 .fila .c.si b{color:var(--ok)}
 .nota{font-size:12px;color:var(--muted);margin-top:8px}
 
-/* Botón flotante: cambia su mensaje según la parte de la página que se está viendo */
-var CTA = [
-  ['Solo por hoy', 'Separa tu cupo con S/ 59', 'Hola, vi la página de precios y quiero separar mi cupo hoy con la matrícula de S/ 59. ¿Qué turnos tienen disponibles?'],
-  ['Matrícula S/ 59 · antes S/ 100', 'Reservar mi cupo ahora', 'Hola, vi los precios y quiero reservar mi cupo ahora con la matrícula de S/ 59. ¿Qué turnos tienen disponibles?'],
-  ['Empieza a ganar cortando', 'Reservar mi cupo ahora', 'Hola, quiero empezar a ganar como barbero. Quiero reservar mi cupo con la matrícula de S/ 59.'],
-  ['Desde tu primer mes', 'Obtén tu polo y tu cupo', 'Hola, quiero separar mi cupo con la matrícula de S/ 59 y obtener mi polo de Callao For Men.'],
-  ['¿Te quedó una duda? Escríbenos', 'Separar mi cupo', 'Hola, tengo una duda sobre el curso de barbería y quiero separar mi cupo con la matrícula de S/ 59.'],
-  ['Los cupos vuelan', 'Separar mi cupo ahora', 'Hola, quiero separar mi cupo ahora con la matrícula de S/ 59. ¿Qué turnos tienen disponibles?']
-];
-var btnF = document.getElementById('ctaFija'), ctaAct = 0;
-function ponCTA(k){
-  if(k===ctaAct) return; ctaAct = k;
-  document.getElementById('ctaSm').textContent = CTA[k][0];
-  document.getElementById('ctaBg').textContent = CTA[k][1];
-  btnF.href = wa('PRECIOS - SEPARAR MI CUPO S/ 59', CTA[k][2]);
-  btnF.classList.remove('cambia','late'); void btnF.offsetWidth; btnF.classList.add('cambia','late');
-}
-if('IntersectionObserver' in window){
-  var io = new IntersectionObserver(function(es){
-    es.forEach(function(e){ if(e.isIntersecting) ponCTA(+e.target.getAttribute('data-cta')); });
-  }, { rootMargin: '-45% 0px -45% 0px' });
-  document.querySelectorAll('[data-cta]').forEach(function(el){ io.observe(el); });
-}
-setInterval(function(){ btnF.classList.remove('late'); void btnF.offsetWidth; btnF.classList.add('late'); }, 7000);
-
 /* Calculadora */
 .calc{margin-top:18px;background:linear-gradient(160deg,rgba(227,167,47,.14),var(--panel) 60%);border:1px solid var(--gold);border-radius:22px;padding:18px}
 .slider{margin-top:14px}
