@@ -676,8 +676,8 @@ var CORE = (function () {
 <script>
 /* =================== CATÁLOGOS =================== */
 const TURNOS = [
-  { id:'LM-M', dias:'Lunes y Miércoles', franja:'Mañana', horario:'10:00 a. m. – 1:00 p. m.', wd:[1,3], color:'#e3a72f', ic:'☀️' },
-  { id:'LM-T', dias:'Lunes y Miércoles', franja:'Tarde',  horario:'3:00 – 6:00 p. m.',        wd:[1,3], color:'#f2784b', ic:'🌇' },
+  { id:'LM-M', dias:'Lunes y Miércoles', franja:'Mañana', horario:'10:00 a. m. – 1:00 p. m.', wd:[1,3], color:'#e3a72f', ic:'☀️', inicio:'2026-11-30' },
+  { id:'LM-T', dias:'Lunes y Miércoles', franja:'Tarde',  horario:'3:00 – 6:00 p. m.',        wd:[1,3], color:'#f2784b', ic:'🌇', inicio:'2026-11-30' },
   { id:'MJ-M', dias:'Martes y Jueves',   franja:'Mañana', horario:'10:00 a. m. – 1:00 p. m.', wd:[2,4], color:'#4fa3f7', ic:'☀️' },
   { id:'MJ-T', dias:'Martes y Jueves',   franja:'Tarde',  horario:'3:00 – 6:00 p. m.',        wd:[2,4], color:'#9b7bf2', ic:'🌇' },
   { id:'SD-M', dias:'Sábados y Domingos',franja:'Mañana', horario:'10:00 a. m. – 1:00 p. m.', wd:[6,0], color:'#2ec4b6', ic:'☀️', inicio:'2026-11-21' },
@@ -1895,7 +1895,7 @@ addEventListener('resize', ()=>{ if(tourI>=0) tourAbrir(tourI); });
 
 /* =================== AUTO-ACTUALIZACIÓN =================== */
 /* Si el celular tiene guardada una versión vieja de la página, se recarga sola con la nueva. */
-const VERSION_APP = '20261109204651';
+const VERSION_APP = '20261109205058';
 (function(){
   try{
     fetch(location.pathname + '?_=' + Date.now(), { cache:'no-store' }).then(r=>r.text()).then(t=>{
