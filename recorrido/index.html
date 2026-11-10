@@ -323,8 +323,10 @@ main{padding:18px 0 110px;overflow-x:hidden}
 .agenda-day span{color:var(--muted);text-transform:none;letter-spacing:0;font-family:var(--body)}
 .quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 /* Asistencia por fechas */
-.as-turnos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-@media(min-width:720px){.as-turnos{grid-template-columns:repeat(3,1fr)}}
+.as-turnos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.as-t{min-width:0}
+.as-t .pend.b-ini{font-size:11px;padding:3px 7px}
+@media(min-width:720px){.as-turnos{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .as-t{display:flex;align-items:center;gap:10px;text-align:left;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--tc);border-radius:14px;padding:10px 12px;min-height:58px}
 .as-t b{display:block;font-size:14px;line-height:1.15}
 .as-t span{font-size:12px;color:var(--muted)}
@@ -447,6 +449,13 @@ main{padding:18px 0 110px;overflow-x:hidden}
 .pz-box{max-width:1100px;margin:0 auto;padding:0 20px}
 .pz-end{text-align:center;padding:20px 16px 6px;margin-top:26px;border-top:1px solid #3a3020;color:#bdb29f;font-size:14px;line-height:1.4;font-family:"Barlow","Helvetica Neue",Arial,sans-serif}
 .pz-end b{color:#f3cf7a;display:block;font-family:"Oswald","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:17px;margin-bottom:2px}
+.badge.b-ini{background:rgba(46,196,182,.16);color:#7ee3d8;border:1px solid rgba(46,196,182,.45)}
+.ini-box{display:flex;gap:12px;align-items:flex-start;margin:12px 0;padding:14px;border-radius:16px;border:1px solid rgba(46,196,182,.5);background:linear-gradient(135deg,rgba(46,196,182,.14),var(--panel))}
+.ini-box .ini-ic{font-size:28px;line-height:1}
+.ini-box > div > b{display:block}
+.ini-box > div > span{font-size:14px;color:var(--muted);display:block;margin-top:2px}
+.cal-d.ini{outline:2px solid #2ec4b6;outline-offset:-2px;background:rgba(46,196,182,.22)!important;color:var(--text)}
+input.flash{box-shadow:0 0 0 3px rgba(46,196,182,.7)}
 </style>
 </head>
 <body>
@@ -671,8 +680,8 @@ const TURNOS = [
   { id:'LM-T', dias:'Lunes y Miércoles', franja:'Tarde',  horario:'3:00 – 6:00 p. m.',        wd:[1,3], color:'#f2784b', ic:'🌇' },
   { id:'MJ-M', dias:'Martes y Jueves',   franja:'Mañana', horario:'10:00 a. m. – 1:00 p. m.', wd:[2,4], color:'#4fa3f7', ic:'☀️' },
   { id:'MJ-T', dias:'Martes y Jueves',   franja:'Tarde',  horario:'3:00 – 6:00 p. m.',        wd:[2,4], color:'#9b7bf2', ic:'🌇' },
-  { id:'SD-M', dias:'Sábados y Domingos',franja:'Mañana', horario:'10:00 a. m. – 1:00 p. m.', wd:[6,0], color:'#2ec4b6', ic:'☀️' },
-  { id:'DFD',  dias:'Domingo Full Day',  franja:'Día completo', horario:'Un solo día a la semana', wd:[0], color:'#e85d9a', ic:'⭐' }
+  { id:'SD-M', dias:'Sábados y Domingos',franja:'Mañana', horario:'10:00 a. m. – 1:00 p. m.', wd:[6,0], color:'#2ec4b6', ic:'☀️', inicio:'2026-11-21' },
+  { id:'DFD',  dias:'Domingo Full Day',  franja:'Día completo', horario:'Un solo día a la semana', wd:[0], color:'#e85d9a', ic:'⭐', inicio:'2026-11-22' }
 ];
 const TMAP = Object.fromEntries(TURNOS.map(t=>[t.id,t]));
 const tNombre = id => { const t=TMAP[id]; if(!t) return id; return t.id==='DFD' ? 'Domingo Full Day' : `${t.dias} · ${t.franja}`; };
@@ -832,7 +841,16 @@ function asisGlobal(dias=30){
   const rs = S.data.asistencia.filter(r=>ids.has(r.alumnoId) && r.fecha>=desde);
   return pct(rs.filter(r=>r.estado==='A'||r.estado==='T').length, rs.filter(r=>r.estado!=='J').length);
 }
-function hayClase(turno, f=hoy()){ return TMAP[turno].wd.includes(pISO(f).getDay()); }
+/* Turnos nuevos: no tienen clases antes de su fecha de inicio (en el recorrido de ejemplo no aplica) */
+function inicioTurno(turno){ return MODO_RECORRIDO ? '' : (TMAP[turno]?.inicio || ''); }
+function porIniciar(turno){ const i = inicioTurno(turno); return !!i && hoy() < i; }
+function diasParaInicio(turno){ return Math.round((pISO(inicioTurno(turno)) - pISO(hoy()))/864e5); }
+function txtFalta(turno){ const n = diasParaInicio(turno); return n===1 ? 'mañana' : 'faltan '+n+' días'; }
+function badgeInicio(turno){ return porIniciar(turno) ? `<span class="badge b-ini">🚀 Inicia ${fDia(inicioTurno(turno))} ${fCorta(inicioTurno(turno))} · ${txtFalta(turno)}</span>` : ''; }
+function avisoInicio(turno, extra=''){ if(!porIniciar(turno)) return ''; const i = inicioTurno(turno);
+  return `<div class="ini-box"><span class="ini-ic" aria-hidden="true">🚀</span><div><b>Este turno todavía no empieza</b>
+    <span>Se activa el <b style="color:var(--text)">${fLarga(i)}</b> (${txtFalta(turno)}). Antes de esa fecha no hay clases ni asistencia que marcar.${extra}</span></div></div>`; }
+function hayClase(turno, f=hoy()){ const i = inicioTurno(turno); if(i && f < i) return false; return TMAP[turno].wd.includes(pISO(f).getDay()); }
 function ultimaClase(turno){ let f=hoy(); for(let i=0;i<8;i++){ if(hayClase(turno,f)) return f; f=addD(f,-1);} return hoy(); }
 function educadoresDe(turno){ return (S.data.educadores||[]).filter(e=>String(e.turnos).split(',').includes(turno) && e.activo!==false && e.activo!=='false'); }
 function precioMens(a){ const v=Number(a?.mensualidad); return v>0 ? v : (Number(S.data.config.mensualidad)||197); }
@@ -929,6 +947,17 @@ function render(){
     </div></nav>`;
 }
 
+document.addEventListener('change', e=>{
+  const r = e.target; if(r.name!=='fTurno') return;
+  const ini = document.getElementById('fIni'), form = r.closest('form'); if(!ini || !form) return;
+  const i = inicioTurno(r.value);
+  if(form.dataset.id) return;
+  let cambio = false;
+  if(i && (!ini.value || ini.value < i)){ ini.value = i; ini.dataset.auto = i; cambio = true; }
+  else if(!i && ini.dataset.auto && ini.value === ini.dataset.auto){ ini.value = hoy(); delete ini.dataset.auto; cambio = true; }
+  if(cambio){ ini.classList.add('flash'); setTimeout(()=>ini.classList.remove('flash'),900); }
+});
+
 /* ---------- Cuenta del alumno (solo lectura) ---------- */
 function yo(){ return S.data.alumnos[0]; }
 function vMiCurso(){
@@ -940,7 +969,7 @@ function vMiCurso(){
     ${p.estado==='Debe'?`<div class="notice warn" style="margin-bottom:12px">⚠️ Tienes un pago vencido de <b>${soles(p.deuda)}</b>. Acércate a la escuela o escríbenos por WhatsApp.</div>`:''}
     <section class="t-hero" style="--tc:${t.color}">
       <p class="kicker" style="color:${t.color}">${t.ic} Tu turno</p>
-      <h1 style="font-size:26px">${esc(t.dias)}</h1>
+      <h1 style="font-size:26px">${esc(t.dias)}</h1>${porIniciar(a.turno)?`<div style="margin-top:6px">${badgeInicio(a.turno)}</div>`:''}
       <div class="when">${t.franja} · ${t.horario}${eds.length?' · 🎓 '+eds.map(e=>esc(e.nombre)).join(', '):''}</div>
       <div class="facts">
         <div class="fact"><b class="num" style="color:${m.color}">${m.n}<span style="font-size:14px;color:var(--muted)">/6</span></b><span>módulo</span></div>
@@ -1104,7 +1133,7 @@ function cardTurno(t){
       <div class="mini-ring" style="--p:${asis||0};--c:${asis==null?'var(--panel-3)':asis>=85?'var(--ok)':asis>=70?'var(--warn)':'var(--bad)'}" title="Asistencia"><b>${asis==null?'—':asis+'%'}</b></div></div>
     <div class="meta"><span class="badge b-gold">👥 ${n} alumno${n===1?'':'s'}</span>
       ${eds.length?eds.map(e=>`<span class="badge">🎓 ${esc(e.nombre)}</span>`).join(''):`<span class="badge b-warn">Sin educador</span>`}
-      ${hayClase(t.id)?'<span class="badge b-info">Hoy hay clase</span>':''}</div>
+      ${hayClase(t.id)?'<span class="badge b-info">Hoy hay clase</span>':''}${badgeInicio(t.id)}</div>
     ${n?`<div class="modbar">${dist.filter(x=>x.c).map(x=>`<i style="width:${x.c/n*100}%;background:${x.m.color}" title="Módulo ${x.m.n}: ${x.c}"></i>`).join('')}</div>
     <div class="legend">${dist.filter(x=>x.c).map(x=>`<span style="--mc:${x.m.color}">M${x.m.n}: ${x.c}</span>`).join('')}</div>`
     : `<div class="small dim">Todavía no hay alumnos en este turno.</div>`}
@@ -1134,7 +1163,7 @@ function vTurno(){
   return `${back}${switcher}
     <section class="t-hero" style="--tc:${t.color}">
       <p class="kicker" style="color:${t.color}">${t.ic} Turno ${esc(t.franja)}</p>
-      <h1>${esc(t.dias)}</h1>
+      <h1>${esc(t.dias)}</h1>${porIniciar(t.id)?`<div style="margin-top:6px">${badgeInicio(t.id)}</div>`:''}
       <div class="when">${t.horario}${eds.length?' · '+eds.map(e=>'🎓 '+esc(e.nombre)).join(', '):''}</div>
       <div class="facts">
         <div class="fact"><b class="num">${als.length}</b><span>alumnos</span></div>
@@ -1148,6 +1177,7 @@ function vTurno(){
       <button data-act="tab" data-tab="historial" aria-pressed="${S.tab==='historial'}">Historial</button>
       <button data-act="tab" data-tab="guia" aria-pressed="${S.tab==='guia'}">Guía</button>
     </div>
+    ${S.tab!=='asistencia' ? avisoInicio(t.id) : ''}
     ${inner}`;
 }
 
@@ -1237,13 +1267,17 @@ function vAsistPage(){
     <div class="as-turnos" role="group" aria-label="Turno">${mios.map(id=>{ const x=TMAP[id], n=alumnosDe(id).length, p=pendientesTurno(id); return `
       <button class="as-t" style="--tc:${x.color}" data-act="asTurno" data-t="${id}" aria-pressed="${id===S.turno}">
         <span class="ic">${x.ic}</span><span style="min-width:0"><b>${esc(x.dias)}</b><span>${esc(x.franja)} · ${n} alumno${n===1?'':'s'}</span></span>
-        ${p?`<span class="badge b-warn pend" title="Clases sin asistencia en los últimos 30 días">${p}</span>`:''}
+        ${porIniciar(id)?`<span class="badge b-ini pend" title="Este turno todavía no empieza">${fCorta(inicioTurno(id))}</span>`:p?`<span class="badge b-warn pend" title="Clases sin asistencia en los últimos 30 días">${p}</span>`:''}
       </button>`; }).join('')}</div>
     ${vAsistencia(t, alumnosDe(t.id))}`;
 }
 function vAsistencia(t, als){
   if(!S.attFecha || S.attTurno!==t.id){ S.attFecha = ultimaClase(t.id); S.attTurno = t.id; S.attMes = S.attFecha.slice(0,7); S.att = cargarAtt(t.id, S.attFecha); }
   if(!S.attMes) S.attMes = S.attFecha.slice(0,7);
+  if(porIniciar(t.id)){ const i = inicioTurno(t.id); S.attMes = i.slice(0,7);
+    const n = alumnosDe(t.id).length;
+    return avisoInicio(t.id, ` Ese día empiezas a marcar la asistencia aquí.`) + vCalendario(t) +
+      `<div class="notice" style="margin-top:12px">👥 ${n ? `<b>${n} alumno${n===1?'':'s'}</b> ya ${n===1?'está inscrito':'están inscritos'} para el inicio.` : 'Todavía no hay alumnos inscritos para el inicio.'} ${esDueno()?'Puedes seguir agregando desde <b>+ Nuevo alumno</b>.':''}</div>`; }
   if(!alumnosDe(t.id).length) return `<div class="notice">El turno ${esc(tNombre(t.id))} todavía no tiene alumnos. ${esDueno()?'Agrégalos desde <b>+ Nuevo alumno</b>.':'La dirección los agregará.'}</div>`;
   return vCalendario(t) + vListaAsis(t);
 }
@@ -1260,6 +1294,7 @@ function vCalendario(t){
     if(regs.length){ cls += clase?' ok':' extra'; lab = `${p}/${regs.length}`; tomadas++; pres+=p; base+=b; }
     else if(clase && !fut && hay){ cls += ' pend'; lab = '!'; pend++; }
     if(clase && !fut && hay) dadas++;
+    if(f===inicioTurno(t.id)) { cls += ' ini'; lab = lab || '🚀'; }
     if(f===H) cls += ' hoy';
     if(f===S.attFecha) cls += ' sel';
     if(fut) cls += ' fut';
@@ -1270,10 +1305,10 @@ function vCalendario(t){
     <div class="cal-h">
       <button class="icon-btn" data-act="calMes" data-d="-1" aria-label="Mes anterior">‹</button>
       <div style="text-align:center"><h3>${nombreMes}</h3><div class="small muted">${t.ic} ${esc(tNombre(t.id))} · clases: ${t.wd.map(w=>['dom','lun','mar','mié','jue','vie','sáb'][w]).join(' y ')}</div></div>
-      <button class="icon-btn" data-act="calMes" data-d="1" aria-label="Mes siguiente" ${mes>=H.slice(0,7)?'disabled':''}>›</button>
+      <button class="icon-btn" data-act="calMes" data-d="1" aria-label="Mes siguiente" ${mes>=(porIniciar(t.id)?inicioTurno(t.id):H).slice(0,7)?'disabled':''}>›</button>
     </div>
     <div class="cal-g">${['L','M','M','J','V','S','D'].map(w=>`<span class="cal-w">${w}</span>`).join('')}${cells}</div>
-    <div class="cal-leg"><span><i style="background:rgba(92,201,138,.25)"></i>Tomada (presentes/total)</span><span><i style="background:rgba(240,180,60,.25)"></i>Pendiente</span><span><i style="background:var(--panel-2)"></i>Día de clase</span><span><i style="background:rgba(122,167,255,.2)"></i>Recuperación</span></div>
+    <div class="cal-leg"><span><i style="background:rgba(92,201,138,.25)"></i>Tomada (presentes/total)</span><span><i style="background:rgba(240,180,60,.25)"></i>Pendiente</span><span><i style="background:var(--panel-2)"></i>Día de clase</span><span><i style="background:rgba(122,167,255,.2)"></i>Recuperación</span>${inicioTurno(t.id)?`<span><i style="background:rgba(46,196,182,.3);outline:2px solid #2ec4b6"></i>Inicio del turno (${fCorta(inicioTurno(t.id))})</span>`:''}</div>
     <div class="cal-sum">
       <div><b>${tomadas}<span style="font-size:14px;color:var(--muted)">/${dadas}</span></b><span>Clases tomadas</span></div>
       <div><b style="color:${pend?'var(--warn)':'var(--ok)'}">${pend}</b><span>Pendientes</span></div>
@@ -1565,7 +1600,7 @@ function hojaAlumno(id, turnoDef){
       <div class="field"><label for="fNom">Nombres y apellidos</label><input id="fNom" required maxlength="60" value="${esc(a?.nombre||'')}" placeholder="Ej.: Luis Fernández"></div>
       <div class="field"><label for="fCel">Celular (WhatsApp)</label><input id="fCel" type="tel" inputmode="tel" maxlength="15" value="${esc(a?.celular||'')}" placeholder="9XXXXXXXX"></div>
       <div class="field"><span class="lbl">Turno (6 turnos)</span><div class="turn-pick">
-        ${TURNOS.map(t=>`<label class="opt"><input type="radio" name="fTurno" value="${t.id}" ${tSel===t.id?'checked':''} required><span><i>${t.ic}</i><span><b>${esc(t.dias)}</b><small>${t.franja} · ${t.horario}</small></span></span></label>`).join('')}</div></div>
+        ${TURNOS.map(t=>`<label class="opt"><input type="radio" name="fTurno" value="${t.id}" ${tSel===t.id?'checked':''} required><span><i>${t.ic}</i><span><b>${esc(t.dias)}</b><small>${t.franja} · ${t.horario}${porIniciar(t.id)?` · <b style="color:#2ec4b6">inicia ${fCorta(inicioTurno(t.id))}</b>`:''}</small></span></span></label>`).join('')}</div></div>
       <div class="field"><span class="lbl">Módulo en que está</span><div class="mod-pick">
         ${MODULOS.map(m=>`<label class="opt"><input type="radio" name="fMod" value="${m.n}" ${(Number(a?.modulo)||1)===m.n?'checked':''}><span style="${''}">${m.n}</span></label>`).join('')}</div>
         <span class="small dim">Si es nuevo, déjalo en 1.</span></div>
@@ -1630,7 +1665,7 @@ function hojaEdu(id){
       <div class="field"><label for="eNom">Nombre</label><input id="eNom" required maxlength="50" value="${esc(e?.nombre||'')}" placeholder="Ej.: Profe Jorge"></div>
       <div class="field"><label for="eCel">Celular (para mandarle su acceso)</label><input id="eCel" type="tel" inputmode="tel" maxlength="15" value="${esc(e?.celular||'')}" placeholder="9XXXXXXXX"></div>
       <div class="field"><span class="lbl">Turnos que va a ver (puedes marcar varios)</span><div class="turn-pick">
-        ${TURNOS.map(t=>`<label class="opt"><input type="checkbox" name="eTur" value="${t.id}" ${ts.includes(t.id)?'checked':''}><span><i>${t.ic}</i><span><b>${esc(t.dias)}</b><small>${t.franja} · ${t.horario}</small></span></span></label>`).join('')}</div></div>
+        ${TURNOS.map(t=>`<label class="opt"><input type="checkbox" name="eTur" value="${t.id}" ${ts.includes(t.id)?'checked':''}><span><i>${t.ic}</i><span><b>${esc(t.dias)}</b><small>${t.franja} · ${t.horario}${porIniciar(t.id)?` · <b style="color:#2ec4b6">inicia ${fCorta(inicioTurno(t.id))}</b>`:''}</small></span></span></label>`).join('')}</div></div>
       <div class="field"><label for="ePin">PIN de acceso (4 a 8 números)</label><input id="ePin" inputmode="numeric" maxlength="8" required value="${esc(pinNuevo)}"></div>
       ${e?`<label class="switch" style="margin-bottom:14px"><span><b>Acceso activo</b><br><span class="small muted">Apágalo si ya no trabaja en la escuela</span></span><input type="checkbox" id="eAct" ${e.activo!==false&&e.activo!=='false'?'checked':''}></label>`:''}
       <button class="btn btn-gold btn-block" type="submit">${e?'Guardar cambios':'Crear acceso'}</button>
@@ -1860,7 +1895,7 @@ addEventListener('resize', ()=>{ if(tourI>=0) tourAbrir(tourI); });
 
 /* =================== AUTO-ACTUALIZACIÓN =================== */
 /* Si el celular tiene guardada una versión vieja de la página, se recarga sola con la nueva. */
-const VERSION_APP = '20261107132739';
+const VERSION_APP = '20261109204651';
 (function(){
   try{
     fetch(location.pathname + '?_=' + Date.now(), { cache:'no-store' }).then(r=>r.text()).then(t=>{
