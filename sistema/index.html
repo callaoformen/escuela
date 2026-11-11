@@ -614,7 +614,7 @@ var CORE = (function () {
       if (!a) err('No se encontró el alumno');
       if (d.quitar) { a.pin = ''; return vista(db, ses); }
       var pin = txt(d.pin, 8);
-      if (!/^\d{6}$/.test(pin)) err('El PIN del alumno debe tener 6 números');
+      if (!/^\d{5,6}$/.test(pin)) err('El PIN del alumno debe tener 5 números');
       if (pinEnUso(db, pin, a.id)) err('Ese PIN ya está en uso, elige otro');
       a.pin = pin;
       return vista(db, ses);
@@ -1603,12 +1603,12 @@ function hojaAlumno(id, turnoDef){
       <div class="field"><span class="lbl">Módulo en que está</span><div class="mod-pick">
         ${MODULOS.map(m=>`<label class="opt"><input type="radio" name="fMod" value="${m.n}" ${(Number(a?.modulo)||1)===m.n?'checked':''}><span style="${''}">${m.n}</span></label>`).join('')}</div>
         <span class="small dim">Si es nuevo, déjalo en 1.</span></div>
-      <div class="field"><label for="fIni">Fecha de inicio</label><input id="fIni" type="date" value="${esc(a?.fechaInicio||hoy())}"><span class="small dim">Desde esta fecha se cuentan las mensualidades cada 28 días.</span></div>
+      <div class="field"><label for="fIni">Fecha de inicio</label><input id="fIni" type="date" value="${esc(a?.fechaInicio||(porIniciar(tSel)?inicioTurno(tSel):hoy()))}"${!a&&porIniciar(tSel)?` data-auto="${inicioTurno(tSel)}"`:''}><span class="small dim">Desde esta fecha se cuentan las mensualidades cada 28 días.</span></div>
       <div class="field" style="margin-bottom:6px"><span class="lbl">Precio para este alumno</span>
         <div class="grid g2"><div><label for="fMens" class="small muted">Mensualidad (S/)</label><input id="fMens" type="number" inputmode="decimal" min="1" step="0.5" value="${esc(precioMens(a))}" style="width:100%;margin-top:4px"></div>
         <div><label for="fMatP" class="small muted">Matrícula (S/)</label><input id="fMatP" type="number" inputmode="decimal" min="1" step="0.5" value="${esc(precioMat(a))}" style="width:100%;margin-top:4px"></div></div>
         <span class="small dim">Por defecto ${soles(S.data.config.mensualidad)} al mes y ${soles(S.data.config.matricula)} de matrícula. Cámbialo solo si a este alumno le cobras otro monto.</span></div>
-      ${!a?`<label class="switch" style="margin:10px 0 14px"><span><b>Pagó la matrícula hoy</b><br><span class="small muted">Se registra en pagos con el monto de arriba</span></span><input type="checkbox" id="fMat" checked></label>`:'<div style="height:10px"></div>'}
+      ${!a?`<label class="switch" style="margin:10px 0 14px"><span><b>Pagó la matrícula hoy</b><br><span class="small muted">Se registra en pagos por Plin con el monto de arriba</span></span><input type="checkbox" id="fMat" checked></label>`:'<div style="height:10px"></div>'}
       <button class="btn btn-gold btn-block" type="submit">${a?'Guardar cambios':'Inscribir alumno'}</button>
     </form>`);
 }
@@ -1650,7 +1650,7 @@ function hojaPago(alumnoId){
       <div class="field"><span class="lbl">Concepto</span><div class="opt-grid">${CONCEPTOS.map(k=>`<label class="opt"><input type="radio" name="pCon" value="${k}" ${k===sug?'checked':''}><span>${k}</span></label>`).join('')}</div></div>
       <div class="grid g2"><div class="field"><label for="pMonto">Monto (S/)</label><input id="pMonto" type="number" inputmode="decimal" min="1" step="0.5" value="${esc(monto)}" required></div>
         <div class="field"><label for="pFecha">Fecha</label><input id="pFecha" type="date" value="${hoy()}" max="${hoy()}"></div></div>
-      <div class="field"><span class="lbl">Medio de pago</span><div class="opt-grid">${MEDIOS.map((k,i)=>`<label class="opt"><input type="radio" name="pMed" value="${k}" ${i===1?'checked':''}><span>${k}</span></label>`).join('')}</div></div>
+      <div class="field"><span class="lbl">Medio de pago</span><div class="opt-grid">${MEDIOS.map((k,i)=>`<label class="opt"><input type="radio" name="pMed" value="${k}" ${k==='Plin'?'checked':''}><span>${k}</span></label>`).join('')}</div></div>
       <button class="btn btn-gold btn-block" type="submit">Guardar pago</button>
     </form>`);
 }
@@ -1721,7 +1721,7 @@ sheet.addEventListener('submit', async e=>{
     if(!(vM>0) || !(vMat>0)){ toast('Revisa los montos de mensualidad y matrícula', true); return; }
     d.mensualidad = vM===Number(cfg.mensualidad) ? 0 : vM;
     d.matricula = vMat===Number(cfg.matricula) ? 0 : vMat;
-    if(!f.dataset.id && $('#fMat')?.checked){ d.pagoMatricula = true; d.montoMatricula = vMat; d.medio='Efectivo'; }
+    if(!f.dataset.id && $('#fMat')?.checked){ d.pagoMatricula = true; d.montoMatricula = vMat; d.medio='Plin'; }
     if(await ejecutar('guardarAlumno', d, f.dataset.id?'Datos actualizados':'¡Alumno inscrito! 🎉')){ cerrarHoja(); render(); }
   }
   if(f.id==='precioForm'){
@@ -1819,7 +1819,7 @@ document.addEventListener('click', async e=>{
       const a = S.data.alumnos.find(x=>x.id===id); if(!a) break;
       if(a.pin && !confirmar(`¿Cambiar el PIN de ${a.nombre}? El PIN anterior dejará de funcionar.`)) break;
       const usados = new Set([String(S.data.config.pinDueno), ...S.data.educadores.map(e=>String(e.pin)), ...S.data.alumnos.map(x=>String(x.pin||''))]);
-      let pin; do { pin = String(100000 + Math.floor(Math.random()*900000)); } while(usados.has(pin));
+      let pin; do { pin = String(10000 + Math.floor(Math.random()*90000)); } while(usados.has(pin));
       if(await ejecutar('pinAlumno', { alumnoId:id, pin }, `Acceso creado para ${a.nombre.split(' ')[0]}. Envíale su PIN 📲`)){ S.verPinAl = id; hojaPerfil(id); render(); }
       break; }
     case 'pinAlQuitar': {
@@ -1894,7 +1894,7 @@ addEventListener('resize', ()=>{ if(tourI>=0) tourAbrir(tourI); });
 
 /* =================== AUTO-ACTUALIZACIÓN =================== */
 /* Si el celular tiene guardada una versión vieja de la página, se recarga sola con la nueva. */
-const VERSION_APP = '20261109205058';
+const VERSION_APP = '20261111160000';
 (function(){
   try{
     fetch(location.pathname + '?_=' + Date.now(), { cache:'no-store' }).then(r=>r.text()).then(t=>{

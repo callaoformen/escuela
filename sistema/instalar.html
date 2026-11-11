@@ -196,7 +196,7 @@ var CORE = (function () {
       if (!a) err('No se encontró el alumno');
       if (d.quitar) { a.pin = ''; return vista(db, ses); }
       var pin = txt(d.pin, 8);
-      if (!/^\d{6}$/.test(pin)) err('El PIN del alumno debe tener 6 números');
+      if (!/^\d{5,6}$/.test(pin)) err('El PIN del alumno debe tener 5 números');
       if (pinEnUso(db, pin, a.id)) err('Ese PIN ya está en uso, elige otro');
       a.pin = pin;
       return vista(db, ses);
